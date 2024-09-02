@@ -4,12 +4,17 @@ const Order = require("../models/Order");
 // Lấy tất cả các đơn hàng
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({}).populate("user", "id name email");
-    res.json(orders);
+    const orders = await Order.find({}).populate("user", "name email");
+
+    // Xử lý trường hợp user không tồn tại
+    const processedOrders = orders.map((order) => ({
+      ...order.toObject(),
+      user: order.user || { name: "Deleted User", email: "N/A" },
+    }));
+
+    res.json(processedOrders);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch orders", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

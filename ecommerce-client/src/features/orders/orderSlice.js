@@ -18,9 +18,14 @@ export const fetchOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get("/api/orders");
+      console.log("Fetched orders:", data);
       return data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
     }
   }
 );
@@ -37,11 +42,18 @@ export const fetchOrderById = createAsyncThunk(
   }
 );
 
+export const updateOrderStatus = createAsyncThunk(
+  "orders/updateOrderStatus",
+  async ({ id, status }) => {
+    const { data } = await axiosInstance.put(`/api/orders/${id}`, { status });
+    return data;
+  }
+);
+
 const orderSlice = createSlice({
   name: "orders",
   initialState: {
     orders: [],
-    order: null,
     loading: false,
     error: null,
   },
@@ -74,13 +86,21 @@ const orderSlice = createSlice({
       .addCase(fetchOrderById.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchOrderById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.order = action.payload;
-      })
+      //   .addCase(fetchOrderById.fulfilled, (state, action) => {
+      //     state.loading = false;
+      //     state.order = action.payload;
+      //   })
       .addCase(fetchOrderById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        const index = state.orders.findIndex(
+          (order) => order._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.orders[index] = action.payload;
+        }
       });
   },
 });

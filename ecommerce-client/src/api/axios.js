@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const instance = axios.create({
+const axiosInstance = axios.create({
   baseURL: "http://localhost:5000",
   headers: {
     "Content-Type": "application/json",
@@ -8,22 +8,23 @@ const instance = axios.create({
 });
 
 // Add a request interceptor
-instance.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
-    // You can add logic here to attach tokens to requests
-    const token = localStorage.getItem("userToken");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    const userInfo = localStorage.getItem("userInfo");
+    if (userInfo) {
+      const parsedUserInfo = JSON.parse(userInfo);
+      config.headers.Authorization = `Bearer ${parsedUserInfo.token}`;
     }
     return config;
   },
   (error) => {
+    console.error("Axios request error:", error);
     return Promise.reject(error);
   }
 );
 
 // Add a response interceptor
-instance.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     // You can add global error handling logic here
@@ -35,4 +36,4 @@ instance.interceptors.response.use(
   }
 );
 
-export default instance;
+export default axiosInstance;

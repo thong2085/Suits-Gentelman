@@ -45,6 +45,33 @@ export const fetchProductsByCategory = createAsyncThunk(
   }
 );
 
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (id) => {
+    await axiosInstance.delete(`/api/products/${id}`);
+    return id;
+  }
+);
+
+export const createProduct = createAsyncThunk(
+  "products/createProduct",
+  async (productData) => {
+    const { data } = await axiosInstance.post("/api/products", productData);
+    return data;
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async ({ id, productData }) => {
+    const { data } = await axiosInstance.put(
+      `/api/products/${id}`,
+      productData
+    );
+    return data;
+  }
+);
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
@@ -99,6 +126,22 @@ const productSlice = createSlice({
       .addCase(fetchProductsByCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.products = state.products.filter(
+          (product) => product._id !== action.payload
+        );
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.products.push(action.payload);
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        const index = state.products.findIndex(
+          (p) => p._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.products[index] = action.payload;
+        }
       });
   },
 });

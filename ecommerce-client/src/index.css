@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  width: 16.66%; /* Cho 6 cột, mỗi cột chiếm 1/6 chiều rộng */
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Ví dụ: cột ID rộng hơn */
+th:first-child,
+td:first-child {
+  width: 20%;
+}
+
+/* Cột User rộng hơn */
+th:nth-child(2),
+td:nth-child(2) {
+  width: 25%;
+}
+th:last-child,
+td:last-child {
+  width: 10%;
+}
+td {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+tr {
+  height: 50px; /* hoặc giá trị phù hợp với thiết kế của bạn */
+}
+td:hover {
+  white-space: normal;
+  overflow: visible;
+  max-width: none;
+}

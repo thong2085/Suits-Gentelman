@@ -8,6 +8,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    userInfo: {
+      name: String,
+      email: String,
+    },
     orderItems: [
       {
         name: { type: String, required: true },
@@ -61,5 +65,17 @@ const orderSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+orderSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("user")) {
+    const user = await mongoose.model("User").findById(this.user);
+    if (user) {
+      this.userInfo = {
+        name: user.name,
+        email: user.email,
+      };
+    }
+  }
+  next();
+});
 
 module.exports = mongoose.model("Order", orderSchema);
