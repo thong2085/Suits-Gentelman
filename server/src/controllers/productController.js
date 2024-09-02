@@ -148,6 +148,42 @@ const getRecommendedProducts = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch recommended products" });
   }
 };
+
+// Tìm kiếm sản phẩm
+const searchProducts = async (req, res) => {
+  try {
+    const keyword = req.query.keyword
+      ? {
+          name: {
+            $regex: req.query.keyword,
+            $options: "i",
+          },
+        }
+      : {};
+
+    const products = await Product.find({ ...keyword });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to search products" });
+  }
+};
+
+// Lấy sản phẩm theo danh mục
+const getProductsByCategory = async (req, res) => {
+  try {
+    const category = req.params.category;
+    const products = await Product.find({ category });
+
+    if (products.length > 0) {
+      res.json(products);
+    } else {
+      res.status(404).json({ message: "No products found in this category" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch products by category" });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -157,4 +193,6 @@ module.exports = {
   addProductReview,
   getProductReviews,
   getRecommendedProducts,
+  searchProducts,
+  getProductsByCategory,
 };

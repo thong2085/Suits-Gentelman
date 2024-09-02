@@ -7,6 +7,7 @@ const {
   createOrder,
   updateOrderStatus,
   deleteOrderStatus,
+  getMyOrders,
 } = require("../controllers/orderController");
 
 // Lấy tất cả đơn hàng (Chỉ dành cho Admin)
@@ -23,5 +24,8 @@ router.put("/:id", protect, admin, updateOrderStatus);
 
 // Xóa đơn hàng (chỉ dành cho Admin)
 router.delete("/:id", protect, admin, deleteOrderStatus);
+
+// Thêm route này
+router.get("/myorders", protect, getMyOrders);
 
 module.exports = router;

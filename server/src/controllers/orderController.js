@@ -93,10 +93,20 @@ const deleteOrderStatus = async (req, res) => {
   }
 };
 
+const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user._id });
+    res.json(orders);
+  } catch (error) {
+    res.status(404).json({ message: "Orders not found" });
+  }
+};
+
 module.exports = {
   getAllOrders,
   getOrderById,
   createOrder,
   updateOrderStatus,
   deleteOrderStatus,
+  getMyOrders,
 };
