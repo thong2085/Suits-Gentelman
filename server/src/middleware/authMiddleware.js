@@ -4,37 +4,40 @@ const User = require("../models/User");
 
 // protection middleware
 const protect = asyncHandler(async (req, res, next) => {
+  console.log("Headers:", req.headers);
   let token;
-  // check if token exists in headers
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
-    // set token from Bearer token in header
     try {
       token = req.headers.authorization.split(" ")[1];
-      // verify token and get user id
+      console.log("Token:", token);
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // get user id from decoded token
+      console.log("Decoded token:", decoded);
       req.user = await User.findById(decoded.id).select("-password");
+      console.log("User found:", req.user);
       next();
     } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: "Invalid authorized, token failed" });
+      console.error("Error in protect middleware:", error);
+      res.status(401);
+      throw new Error("Not authorized, token failed");
     }
   }
-  // if token doesn't exist in headers send error
   if (!token) {
-    res.status(401).json({ message: "Not authorized, no token" });
+    res.status(401);
+    throw new Error("Not authorized, no token");
   }
 });
 
 // Admin middleware
 const admin = (req, res, next) => {
+  console.log("Checking admin rights for user:", req.user);
   if (req.user && req.user.role === "admin") {
     next();
   } else {
-    res.status(401).json({ message: "Not authorized as an admin" });
+    res.status(403);
+    throw new Error("Not authorized as an admin");
   }
 };
 

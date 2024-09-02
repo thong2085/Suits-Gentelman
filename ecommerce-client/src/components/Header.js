@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
 import {
   ShoppingCartIcon,
   UserCircleIcon,
@@ -8,9 +9,16 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cart = useSelector((state) => state.cart);
-  const cartItems = cart?.cartItems || [];
   const { userInfo } = useSelector((state) => state.auth);
+  const cartItems = cart?.cartItems || [];
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
@@ -58,7 +66,13 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+                  >
+                    <div className="w-5 h-5 mr-1">
+                      <ArrowRightEndOnRectangleIcon />
+                    </div>
                     Logout
                   </button>
                 </li>

@@ -16,7 +16,7 @@ const {
 const router = express.Router();
 
 router.get("/", getAllProducts);
-router.post("/create", protect, admin, createProduct);
+router.post("/", protect, admin, createProduct);
 router.get("/search", searchProducts); // Thêm route tìm kiếm
 router.get("/category/:category", getProductsByCategory); // Thêm route lấy sản phẩm theo danh mục
 router.get("/:id", getProductById); // Loại bỏ middleware protect

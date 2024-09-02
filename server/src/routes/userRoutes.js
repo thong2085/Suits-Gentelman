@@ -20,7 +20,11 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/", protect, admin, getAllUsers); // Chỉ admin mới có thể xem danh sách user
+router.get("/", protect, admin, (req, res) => {
+  console.log("User requesting all users:", req.user);
+  getAllUsers(req, res);
+});
+
 router.get("/:id", protect, getUserById);
 router.put("/:id", protect, updateUser);
 router.delete("/:id", protect, admin, deleteUser);

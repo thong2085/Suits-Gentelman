@@ -128,10 +128,14 @@ const getUserById = async (req, res) => {
   }
 };
 
-// Lấy tất cả users (Admin)
 const getAllUsers = async (req, res) => {
-  const users = await User.find({});
-  res.json(users);
+  try {
+    const users = await User.find({}).select("-password");
+    res.json(users);
+  } catch (error) {
+    console.error("Error in getAllUsers:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
 
 // Trong hàm enable2FA, thay vì tạo QR code, gửi mã OTP qua email
@@ -274,6 +278,16 @@ const addToPurchasedProducts = async (req, res) => {
     res.status(201).json({ message: "Product added to purchase history" });
   } else {
     res.status(404).json({ message: "User not found" });
+  }
+};
+
+// Lấy chi tiết order
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({}).populate("user", "name email");
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
