@@ -21,6 +21,14 @@ app.use(
     cookie: { secure: false }, // Nếu true, chỉ truyền cookie qua HTTPS
   })
 );
+
+app.use(cors());
+app.use(express.json());
+// Cấu hình Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Khởi tạo HTTP server và Socket.io
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -29,13 +37,6 @@ const io = new Server(server, {
   },
 });
 
-app.use(cors());
-app.use(express.json());
-// Cấu hình Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Socket.io
 io.on("connection", (socket) => {
   console.log("New client connected", socket.id);
 
@@ -52,7 +53,9 @@ app.use((req, res, next) => {
 // Connect to MongoDB
 DB.connect();
 
+// Thiết lập các route
 routes(app);
 
+// Khởi động server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

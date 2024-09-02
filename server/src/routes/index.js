@@ -9,7 +9,7 @@ const routes = (app) => {
   app.use("/api/payment", paymentRoutes);
   app.use("/auth", authRoutes);
   app.use("/api/orders", orderRoutes);
-  app.use("/api/product", productRoutes);
+  app.use("/api/products", productRoutes);
 };
 
 module.exports = routes;
