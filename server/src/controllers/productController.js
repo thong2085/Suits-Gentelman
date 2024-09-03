@@ -80,46 +80,61 @@ const deleteProduct = async (req, res) => {
 
 // Thêm đánh giá cho sản phẩm
 const addProductReview = async (req, res) => {
-  const { rating, comment } = req.body;
-  const product = await Product.findById(req.params.id);
+  try {
+    const { rating, comment } = req.body;
+    const product = await Product.findById(req.params.id);
 
-  if (product) {
-    const alreadyReviewed = product.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
-    );
+    if (product) {
+      const alreadyReviewed = product.reviews.find(
+        (r) => r.user.toString() === req.user._id.toString()
+      );
 
-    if (alreadyReviewed) {
-      return res.status(400).json({ message: "Product already reviewed" });
+      if (alreadyReviewed) {
+        return res.status(400).json({ message: "Product already reviewed" });
+      }
+
+      const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id,
+      };
+
+      product.reviews.push(review);
+      product.numReviews = product.reviews.length;
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+
+      await product.save();
+      res.status(201).json({ message: "Review added" });
+    } else {
+      res.status(404).json({ message: "Product not found" });
     }
-
-    const review = {
-      name: req.user.name,
-      rating: Number(rating),
-      comment,
-      user: req.user._id,
-    };
-
-    product.reviews.push(review);
-    product.numReviews = product.reviews.length;
-    product.rating =
-      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      product.reviews.length;
-
-    await product.save();
-    res.status(201).json({ message: "Review added" });
-  } else {
-    res.status(404).json({ message: "Product not found" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to add review", error: error.message });
   }
 };
 
 // Lấy danh sách đánh giá sản phẩm
 const getProductReviews = async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  try {
+    const product = await Product.findById(req.params.id).populate(
+      "reviews.user",
+      "name"
+    );
 
-  if (product) {
-    res.json(product.reviews);
-  } else {
-    res.status(404).json({ message: "Product not found" });
+    if (product) {
+      res.json(product.reviews || []);
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch reviews", error: error.message });
   }
 };
 
@@ -221,6 +236,54 @@ const getProducts = async (req, res) => {
   }
 };
 
+const getTopReviews = async (req, res) => {
+  try {
+    console.log("Starting getTopReviews function");
+    console.log("Product model:", Product);
+
+    if (!Product || typeof Product.aggregate !== "function") {
+      throw new Error("Product model is not properly defined or imported");
+    }
+
+    const topReviews = await Product.aggregate([
+      { $unwind: "$reviews" },
+      { $match: { "reviews.rating": { $gte: 4 } } },
+      { $sort: { "reviews.rating": -1, "reviews.createdAt": -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "reviews.user",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      { $unwind: "$userDetails" },
+      {
+        $project: {
+          content: "$reviews.comment",
+          author: "$userDetails.name",
+          rating: "$reviews.rating",
+          productId: "$_id",
+        },
+      },
+    ]);
+
+    console.log("Aggregation result:", topReviews);
+
+    if (topReviews.length === 0) {
+      return res.status(404).json({ message: "No top reviews found" });
+    }
+
+    res.json(topReviews);
+  } catch (error) {
+    console.error("Error in getTopReviews:", error);
+    res
+      .status(500)
+      .json({ message: "Error fetching top reviews", error: error.message });
+  }
+};
+
 const importProducts = asyncHandler(async (req, res) => {
   await Product.deleteMany({});
   const products = await Product.insertMany(productsData);
@@ -241,4 +304,5 @@ module.exports = {
   getAllCategories,
   getProducts,
   importProducts,
+  getTopReviews,
 };
