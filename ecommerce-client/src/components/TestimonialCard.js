@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TestimonialCard = ({ testimonial }) => {
   return (
@@ -19,6 +20,14 @@ const TestimonialCard = ({ testimonial }) => {
           ))}
         </div>
       </div>
+      {testimonial.productId && (
+        <Link
+          to={`/product/${testimonial.productId}`}
+          className="text-blue-500 hover:underline mt-2 block"
+        >
+          Xem sản phẩm
+        </Link>
+      )}
     </div>
   );
 };

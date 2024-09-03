@@ -85,14 +85,58 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+export const addReview = createAsyncThunk(
+  "products/addReview",
+  async ({ productId, rating, comment }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        `/api/products/${productId}/reviews`,
+        { rating, comment }
+      );
+      return response.data;
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data.message === "Product already reviewed"
+      ) {
+        return rejectWithValue("You have already reviewed this product.");
+      }
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "An error occurred while submitting the review."
+      );
+    }
+  }
+);
+
+export const getReviews = createAsyncThunk(
+  "products/getReviews",
+  async (productId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/products/${productId}/reviews`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      return rejectWithValue(error.response?.data || "An error occurred");
+    }
+  }
+);
+
+const initialState = {
+  products: [],
+  product: null,
+  reviews: [],
+  loading: false,
+  reviewsLoading: false,
+  error: null,
+  reviewsError: null,
+};
+
 const productSlice = createSlice({
   name: "products",
-  initialState: {
-    products: [],
-    product: null,
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -117,7 +161,8 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
+        console.error("Product fetch rejected:", action.payload);
       })
       .addCase(searchProducts.pending, (state) => {
         state.loading = true;
@@ -156,6 +201,25 @@ const productSlice = createSlice({
         if (index !== -1) {
           state.products[index] = action.payload;
         }
+      })
+      .addCase(addReview.fulfilled, (state, action) => {
+        state.reviews.push(action.payload);
+      })
+      .addCase(addReview.rejected, (state, action) => {
+        state.reviewsError = action.payload;
+      })
+      .addCase(getReviews.fulfilled, (state, action) => {
+        console.log("getReviews.fulfilled payload:", action.payload);
+        state.reviewsLoading = false;
+        state.reviews = action.payload;
+      })
+      .addCase(getReviews.pending, (state) => {
+        state.reviewsLoading = true;
+        state.reviewsError = null;
+      })
+      .addCase(getReviews.rejected, (state, action) => {
+        state.reviewsLoading = false;
+        state.reviewsError = action.payload;
       });
   },
 });
