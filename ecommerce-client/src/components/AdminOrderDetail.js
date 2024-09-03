@@ -210,36 +210,37 @@ const AdminOrderDetail = () => {
         </div>
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-2">{t("orderTimeline")}</h3>
-          {order ? (
-            <div className="relative border-l-2 border-gray-200 ml-3">
-              {steps.map((step, index) => (
+          <div className="relative border-l-2 border-gray-200 ml-3">
+            {steps.map((step, index) => {
+              const isCompleted =
+                steps.findIndex((s) => s.status === currentStatus) >= index;
+              const stepDate =
+                order[`${step.status}At`] ||
+                (step.status === "processing" ? order.createdAt : null);
+              return (
                 <div
                   key={index}
                   className={`mb-4 flex items-center ${
-                    currentStep >= index ? "text-blue-500" : "text-gray-500"
+                    isCompleted ? "text-green-400" : "text-gray-500"
                   }`}
                 >
                   <div
                     className={`absolute w-3 h-3 bg-white border-2 rounded-full -left-1.5 ${
-                      currentStep >= index
-                        ? "border-blue-500"
-                        : "border-gray-300"
+                      isCompleted ? "border-green-400" : "border-gray-300"
                     }`}
                   ></div>
                   <div className="ml-6">
                     <p className="font-semibold">{step.label}</p>
-                    {step.date && (
+                    {stepDate && (
                       <p className="text-sm text-gray-500">
-                        {new Date(step.date).toLocaleString()}
+                        {new Date(stepDate).toLocaleString()}
                       </p>
                     )}
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p>Loading order details...</p>
-          )}
+              );
+            })}
+          </div>
         </div>
         {isUpdating && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

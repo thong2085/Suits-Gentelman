@@ -2,12 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axios";
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async (params = {}, { rejectWithValue }) => {
+  async ({ keyword = "", category = null }, { rejectWithValue }) => {
     try {
-      const { keyword = "", category = null } = params;
       let url = `/api/products?keyword=${keyword}`;
       if (category) {
-        url += `&category=${category}`;
+        url += `&category=${encodeURIComponent(category)}`;
       }
       const response = await axiosInstance.get(url);
       return response.data;
@@ -46,11 +45,16 @@ export const searchProducts = createAsyncThunk(
 
 export const fetchProductsByCategory = createAsyncThunk(
   "products/fetchProductsByCategory",
-  async (category) => {
-    const { data } = await axiosInstance.get(
-      `/api/products/category/${category}`
-    );
-    return data;
+  async (category, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/products?category=${encodeURIComponent(category)}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -94,6 +98,7 @@ const productSlice = createSlice({
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
@@ -134,7 +139,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductsByCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.products = state.products.filter(

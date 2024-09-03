@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
   return (
-    <Link to={`/category/${category.name}`} className="block">
+    <Link
+      to={`/category/${encodeURIComponent(category.name)}`}
+      className="block"
+    >
       <div className="card overflow-hidden">
         <img
           src={category.image}

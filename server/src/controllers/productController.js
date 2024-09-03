@@ -195,19 +195,28 @@ const getAllCategories = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { keyword, category } = req.query;
-    let query = {};
+    console.log("Received query:", { keyword, category });
 
+    let query = {};
     if (keyword) {
       query.name = { $regex: keyword, $options: "i" };
     }
-
     if (category) {
-      query.category = category;
+      query.category = { $regex: new RegExp(`^${category}$`, "i") };
     }
 
+    console.log("MongoDB query:", query);
+
     const products = await Product.find(query);
+    console.log(
+      "Products found:",
+      products.length,
+      products.map((p) => ({ name: p.name, category: p.category }))
+    );
+
     res.json(products);
   } catch (error) {
+    console.error("Error in getProducts:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
