@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../features/products/productSlice";
 import { addToCart } from "../features/cart/cartSlice";
 import { useTranslation } from "react-i18next";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const ProductDetailPage = () => {
   const { t } = useTranslation();
@@ -41,7 +42,9 @@ const ProductDetailPage = () => {
         </div>
         <div className="w-full md:w-1/2 px-4">
           <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
-          <p className="text-xl mb-4">${product.price.toFixed(2)}</p>
+          <p className="text-red-500 font-bold mb-4">
+            {formatCurrency(product.price)}
+          </p>
           <p className="mb-4">{product.description}</p>
           <div className="flex items-center mb-4">
             <label htmlFor="quantity" className="mr-2">

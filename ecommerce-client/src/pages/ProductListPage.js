@@ -13,11 +13,7 @@ const ProductListPage = () => {
   const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const {
-    products,
-    loading: productsLoading,
-    error: productsError,
-  } = useSelector((state) => state.products);
+  const { products, loading, error } = useSelector((state) => state.products);
   const {
     categories,
     loading: categoriesLoading,
@@ -35,15 +31,23 @@ const ProductListPage = () => {
     dispatch(fetchProducts({ keyword, category: selectedCategory }));
   }, [dispatch, keyword, selectedCategory]);
 
+  useEffect(() => {}, [selectedCategory, products]);
+
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   };
 
-  if (productsLoading || categoriesLoading) return <div>{t("loading")}</div>;
-  if (productsError || categoriesError)
+  const filteredProducts = selectedCategory
+    ? products.filter((product) => product.category === selectedCategory)
+    : products;
+
+  useEffect(() => {}, [filteredProducts]);
+
+  if (loading || categoriesLoading) return <div>{t("loading")}</div>;
+  if (error || categoriesError)
     return (
       <div>
-        {t("error")}: {productsError || categoriesError}
+        {t("error")}: {error || categoriesError}
       </div>
     );
 
@@ -61,7 +65,7 @@ const ProductListPage = () => {
             <p>{t("noProductsFound")}</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>

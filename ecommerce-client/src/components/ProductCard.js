@@ -14,7 +14,7 @@ const ProductCard = ({ product }) => {
         <div className="p-4">
           <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
           <p className="text-gray-600 mb-2">{product.category}</p>
-          <p className="text-accent font-bold">
+          <p className="text-red-500 font-bold">
             {formatCurrency(product.price)}
           </p>
         </div>
