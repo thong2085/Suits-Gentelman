@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Áo sơ mi trắng nam",
+    "description": "Áo sơ mi trắng nam chất liệu cotton cao cấp, phù hợp cho công sở và các dịp trang trọng",
+    "price": 399000,
+    "category": "Áo",
+    "image": "https://images.unsplash.com/photo-1621072156002-e2fccdc0b176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "brand": "TopMen",
+    "countInStock": 50,
+    "rating": 4.5,
+    "numReviews": 12
+  },
+  {
+    "name": "Quần jean nam slim fit",
+    "description": "Quần jean nam kiểu dáng slim fit, màu xanh đậm thời trang",
+    "price": 599000,
+    "category": "Quần",
+    "image": "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=926&q=80",
+    "brand": "DenimCo",
+    "countInStock": 30,
+    "rating": 4.2,
+    "numReviews": 8
+  },
+  {
+    "name": "Giày da Oxford nam",
+    "description": "Giày da Oxford nam màu đen, phong cách lịch lãm",
+    "price": 1490000,
+    "category": "Giày",
+    "image": "https://images.unsplash.com/photo-1614252369475-531eba835eb1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=415&q=80",
+    "brand": "LuxeShoes",
+    "countInStock": 15,
+    "rating": 4.8,
+    "numReviews": 20
+  },
+  {
+    "name": "Áo polo nam cotton",
+    "description": "Áo polo nam chất liệu cotton thoáng mát, nhiều màu sắc",
+    "price": 299000,
+    "category": "Áo",
+    "image": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "brand": "CasualWear",
+    "countInStock": 40,
+    "rating": 4.0,
+    "numReviews": 15
+  },
+  {
+    "name": "Quần kaki nam",
+    "description": "Quần kaki nam màu be, phong cách casual",
+    "price": 449000,
+    "category": "Quần",
+    "image": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "brand": "UrbanStyle",
+    "countInStock": 25,
+    "rating": 4.3,
+    "numReviews": 10
+  },
+  {
+    "name": "Áo khoác da nam",
+    "description": "Áo khoác da nam màu đen, phong cách bụi bặm",
+    "price": 1990000,
+    "category": "Áo",
+    "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80",
+    "brand": "RockStar",
+    "countInStock": 10,
+    "rating": 4.7,
+    "numReviews": 18
+  },
+  {
+    "name": "Giày thể thao nam",
+    "description": "Giày thể thao nam nhẹ, thoáng khí, phù hợp cho chạy bộ",
+    "price": 890000,
+    "category": "Giày",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    "brand": "SportyGo",
+    "countInStock": 35,
+    "rating": 4.4,
+    "numReviews": 22
+  },
+  {
+    "name": "Đồng hồ nam dây da",
+    "description": "Đồng hồ nam dây da màu nâu, mặt số trắng thanh lịch",
+    "price": 2990000,
+    "category": "Phụ kiện",
+    "image": "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=394&q=80",
+    "brand": "TimeMaster",
+    "countInStock": 8,
+    "rating": 4.9,
+    "numReviews": 30
+  },
+  {
+    "name": "Ví da nam",
+    "description": "Ví da nam màu đen, nhiều ngăn tiện dụng",
+    "price": 599000,
+    "category": "Phụ kiện",
+    "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "brand": "LeatherCraft",
+    "countInStock": 20,
+    "rating": 4.1,
+    "numReviews": 14
+  },
+  {
+    "name": "Thắt lưng nam",
+    "description": "Thắt lưng nam da thật, khóa kim loại sang trọng",
+    "price": 499000,
+    "category": "Phụ kiện",
+    "image": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    "brand": "BeltMaster",
+    "countInStock": 25,
+    "rating": 4.6,
+    "numReviews": 16
+  }
+]

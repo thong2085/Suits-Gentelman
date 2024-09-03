@@ -1,23 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="border rounded-lg p-4 shadow-md">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-48 object-cover mb-4"
-      />
-      <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-      <p className="text-gray-600 mb-2">${product.price.toFixed(2)}</p>
-      <Link
-        to={`/product/${product._id}`}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        View Details
-      </Link>
-    </div>
+    <Link to={`/product/${product._id}`} className="block">
+      <div className="card overflow-hidden">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-64 object-cover object-center"
+        />
+        <div className="p-4">
+          <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+          <p className="text-gray-600 mb-2">{product.category}</p>
+          <p className="text-accent font-bold">
+            {formatCurrency(product.price)}
+          </p>
+        </div>
+      </div>
+    </Link>
   );
 };
 

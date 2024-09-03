@@ -1,50 +1,186 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap");
+
+:root {
+  --color-background: #f5f5f5;
+  --color-text: #333333;
+  --color-accent: #1b1b1b;
+  --color-secondary: #9ca3af;
+  --color-white: #ffffff;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Roboto", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+a {
+  color: var(--color-background);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #9ca3af;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #1b1b11;
+  transform: translateY(-2px);
+}
+
+.card {
+  background-color: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Header styles */
+header {
+  background: linear-gradient(to right, var(--color-accent), #1b1b1b);
+  color: var(--color-white);
+}
+
+header a {
+  color: var(--color-white);
+}
+
+header a:hover {
+  color: var(--color-secondary);
+}
+
+/* Table styles */
+.table-container {
+  background-color: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
 table {
-  table-layout: fixed;
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 th,
 td {
-  width: 16.66%; /* Cho 6 cột, mỗi cột chiếm 1/6 chiều rộng */
-  padding: 10px;
+  padding: 12px 16px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-td {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-/* Ví dụ: cột ID rộng hơn */
-th:first-child,
-td:first-child {
-  width: 20%;
+  border-bottom: 1px solid var(--color-secondary);
 }
 
-/* Cột User rộng hơn */
-th:nth-child(2),
-td:nth-child(2) {
-  width: 25%;
+th {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-th:last-child,
-td:last-child {
-  width: 10%;
+
+tr:last-child td {
+  border-bottom: none;
 }
-td {
-  max-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+tr:hover {
+  background-color: #f8f8f8;
 }
-tr {
-  height: 50px; /* hoặc giá trị phù hợp với thiết kế của bạn */
+
+/* Banner styles */
+.banner {
+  background: linear-gradient(to right, var(--color-background), #2c4f9f);
+  color: var(--color-white);
+  padding: 60px 0;
+  text-align: center;
 }
-td:hover {
-  white-space: normal;
-  overflow: visible;
-  max-width: none;
+
+.banner h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--color-white);
+}
+
+.banner p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: none;
+  color: var(--color-accent);
+}
+
+/* Additional utility classes */
+.text-accent {
+  color: var(--color-background);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.border-accent {
+  border-color: var(--color-accent);
+}
+
+.step-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.step.completed .step-indicator {
+  background-color: #4caf50;
+}
+
+.step.current .step-indicator {
+  background-color: #2196f3;
 }

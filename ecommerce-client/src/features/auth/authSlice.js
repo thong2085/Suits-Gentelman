@@ -66,7 +66,6 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
         state.userInfo = action.payload;
         localStorage.setItem("userInfo", JSON.stringify(action.payload));
       })
@@ -78,7 +77,6 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.loading = false;
         state.userInfo = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
@@ -89,7 +87,6 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
-        state.loading = false;
         state.userInfo = action.payload;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {

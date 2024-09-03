@@ -8,10 +8,16 @@ const session = require("express-session");
 const passport = require("passport");
 const DB = require("./config/db");
 require("./config/passport"); // Import cấu hình passport
-
+const cloudinary = require("cloudinary");
 dotenv.config();
 const app = express();
 
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
 // Thiết lập middleware session
 app.use(
   session({

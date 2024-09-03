@@ -51,7 +51,7 @@ const OrderListPage = () => {
                     {order.isPaid ? "Yes" : "No"}
                   </td>
                   <td className="border px-4 py-2">
-                    {order.isDelivered ? "Yes" : "No"}
+                    {order.status === "delivered" ? "Yes" : "No"}
                   </td>
                   <td className="border px-4 py-2">
                     <Link to={`/order/${order._id}`} className="text-blue-500">

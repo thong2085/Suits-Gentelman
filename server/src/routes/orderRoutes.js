@@ -8,13 +8,15 @@ const {
   updateOrderStatus,
   deleteOrderStatus,
   getMyOrders,
+  updateOrderToPaid,
+  cancelOrder,
 } = require("../controllers/orderController");
 
 // Lấy tất cả đơn hàng (Chỉ dành cho Admin)
 router.get("/", protect, admin, getAllOrders);
 
 // Tạo đơn hàng mới
-router.post("/create", protect, createOrder);
+router.post("/", protect, createOrder);
 
 // Lấy chi tiết đơn hàng theo ID
 router.get("/:id", protect, getOrderById);
@@ -27,5 +29,11 @@ router.delete("/:id", protect, admin, deleteOrderStatus);
 
 // Thêm route này
 router.get("/myorders", protect, getMyOrders);
+
+// Thanh toán đơn hàng
+router.put("/:id/pay", protect, updateOrderToPaid);
+
+// Hủy đơn hàng
+router.put("/:id/cancel", protect, cancelOrder);
 
 module.exports = router;

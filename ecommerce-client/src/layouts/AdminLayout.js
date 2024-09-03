@@ -1,38 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import {
+  HomeIcon,
+  CubeIcon,
+  ShoppingCartIcon,
+  UsersIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 const AdminLayout = () => {
+  const { t } = useTranslation();
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const menuItems = [
+    { to: "/admin", text: "dashboard", icon: HomeIcon },
+    { to: "/admin/products", text: "products", icon: CubeIcon },
+    { to: "/admin/orders", text: "orders", icon: ShoppingCartIcon },
+    { to: "/admin/users", text: "users", icon: UsersIcon },
+  ];
+
+  const toggleSidebar = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
-    <div className="flex">
-      <aside className="w-64 min-h-screen bg-gray-800 text-white p-4">
-        <h2 className="text-2xl font-bold mb-4">Admin Panel</h2>
-        <nav>
+    <div className="flex h-screen bg-gray-100">
+      <aside
+        className={`${
+          isExpanded ? "w-64" : "w-20"
+        } bg-gray-800 text-white transition-all duration-300 ease-in-out`}
+      >
+        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+          {isExpanded && (
+            <h2 className="text-white font-semibold">Admin Control Panel</h2>
+          )}
+          <button
+            onClick={toggleSidebar}
+            className="p-1 rounded-full hover:bg-gray-700"
+          >
+            {isExpanded ? (
+              <XMarkIcon className="w-6 h-6" />
+            ) : (
+              <Bars3Icon className="w-6 h-6" />
+            )}
+          </button>
+        </div>
+        <nav className="mt-5">
           <ul>
-            <li className="mb-2">
-              <Link to="/admin" className="hover:text-gray-300">
-                Dashboard
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link to="/admin/products" className="hover:text-gray-300">
-                Products
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link to="/admin/orders" className="hover:text-gray-300">
-                Orders
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link to="/admin/users" className="hover:text-gray-300">
-                Users
-              </Link>
-            </li>
+            {menuItems.map((item) => (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  className={`flex items-center py-3 px-4 hover:bg-gray-700 transition-colors ${
+                    isExpanded ? "justify-start" : "justify-center"
+                  }`}
+                >
+                  <item.icon className="w-6 h-6" />
+                  {isExpanded && <span className="ml-3">{t(item.text)}</span>}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
       </aside>
-      <main className="flex-grow p-8">
-        <Outlet />
+      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 mt-10">
+        <div className="container mx-auto px-6 py-8">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

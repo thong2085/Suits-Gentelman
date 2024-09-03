@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUserProfile } from "../features/auth/authSlice";
+import { useTranslation } from "react-i18next";
 
 const UserProfilePage = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { userInfo, loading, error } = useSelector((state) => state.auth);
   const [name, setName] = useState("");
@@ -20,7 +22,7 @@ const UserProfilePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords don't match");
+      alert(t("passwordsDontMatch"));
       return;
     }
     dispatch(updateUserProfile({ id: userInfo._id, name, email, password }));
@@ -28,11 +30,11 @@ const UserProfilePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">User Profile</h1>
+      <h1 className="text-3xl font-bold mb-8">{t("userProfile")}</h1>
       <form onSubmit={handleSubmit} className="max-w-md">
         <div className="mb-4">
           <label htmlFor="name" className="block mb-2">
-            Name
+            {t("name")}
           </label>
           <input
             type="text"
@@ -45,7 +47,7 @@ const UserProfilePage = () => {
         </div>
         <div className="mb-4">
           <label htmlFor="email" className="block mb-2">
-            Email
+            {t("email")}
           </label>
           <input
             type="email"
@@ -58,7 +60,7 @@ const UserProfilePage = () => {
         </div>
         <div className="mb-4">
           <label htmlFor="password" className="block mb-2">
-            New Password
+            {t("newPassword")}
           </label>
           <input
             type="password"
@@ -70,7 +72,7 @@ const UserProfilePage = () => {
         </div>
         <div className="mb-4">
           <label htmlFor="confirmPassword" className="block mb-2">
-            Confirm New Password
+            {t("confirmNewPassword")}
           </label>
           <input
             type="password"
@@ -85,7 +87,7 @@ const UserProfilePage = () => {
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           disabled={loading}
         >
-          {loading ? "Updating..." : "Update Profile"}
+          {loading ? t("updating") : t("updateProfile")}
         </button>
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </form>

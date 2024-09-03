@@ -5,20 +5,24 @@ import {
   deleteProduct,
 } from "../../features/products/productSlice";
 import Modal from "../../components/Modal";
-import ProductForm from "../../components/ProductForm"; // Bạn cần tạo component này
+import ProductForm from "../../components/ProductForm";
+import { useTranslation } from "react-i18next";
 
 const ProductList = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.products);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(
+      fetchProducts({ keyword: "searchTerm", category: "categoryName" })
+    );
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
+    if (window.confirm(t("confirmDelete"))) {
       dispatch(deleteProduct(id));
     }
   };
@@ -38,57 +42,64 @@ const ProductList = () => {
     setEditingProduct(null);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>{t("loading")}</div>;
+  if (error)
+    return (
+      <div>
+        {t("error")}: {error}
+      </div>
+    );
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Product List</h1>
+        <h1 className="text-2xl font-bold">{t("productList")}</h1>
         <button
           onClick={handleCreate}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          Create Product
+          {t("createProduct")}
         </button>
       </div>
-      <table className="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">ID</th>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Price</th>
-            <th className="py-2 px-4 border-b">Category</th>
-            <th className="py-2 px-4 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product._id}>
-              <td className="py-2 px-4 border-b">{product._id}</td>
-              <td className="py-2 px-4 border-b">{product.name}</td>
-              <td className="py-2 px-4 border-b">
-                ${product.price.toFixed(2)}
-              </td>
-              <td className="py-2 px-4 border-b">{product.category}</td>
-              <td className="py-2 px-4 border-b">
-                <button
-                  onClick={() => handleEdit(product)}
-                  className="text-blue-500 hover:underline mr-2"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(product._id)}
-                  className="text-red-500 hover:underline"
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="table-container">
+        <table className="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b">{t("id")}</th>
+              <th className="py-2 px-4 border-b">{t("name")}</th>
+              <th className="py-2 px-4 border-b">{t("price")}</th>
+              <th className="py-2 px-4 border-b">{t("category")}</th>
+              <th className="py-2 px-4 border-b">{t("actions")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td className="py-2 px-4 border-b">{product._id}</td>
+                <td className="py-2 px-4 border-b">{product.name}</td>
+                <td className="py-2 px-4 border-b">
+                  ${product.price.toFixed(2)}
+                </td>
+                <td className="py-2 px-4 border-b">{product.category}</td>
+                <td className="py-2 px-4 border-b">
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="text-blue-500 hover:underline mr-2"
+                  >
+                    {t("edit")}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    {t("delete")}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <ProductForm product={editingProduct} onClose={handleCloseModal} />
