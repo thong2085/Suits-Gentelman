@@ -1,6 +1,8 @@
 // controllers/productController.js
 const Product = require("../models/Product");
 const User = require("../models/User");
+const productsData = require("../data/productsData.json");
+const asyncHandler = require("express-async-handler");
 
 const getAllProducts = async (req, res) => {
   try {
@@ -171,18 +173,50 @@ const searchProducts = async (req, res) => {
 // Lấy sản phẩm theo danh mục
 const getProductsByCategory = async (req, res) => {
   try {
-    const category = req.params.category;
+    const { category } = req.params;
     const products = await Product.find({ category });
-
-    if (products.length > 0) {
-      res.json(products);
-    } else {
-      res.status(404).json({ message: "No products found in this category" });
-    }
+    res.json(products);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch products by category" });
   }
 };
+
+// Thêm phương thức để lấy tất cả các danh mục
+const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Product.distinct("category");
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch categories" });
+  }
+};
+
+// Thêm phương thức mới để lấy sản phẩm theo danh mục
+const getProducts = async (req, res) => {
+  try {
+    const { keyword, category } = req.query;
+    let query = {};
+
+    if (keyword) {
+      query.name = { $regex: keyword, $options: "i" };
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    const products = await Product.find(query);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+const importProducts = asyncHandler(async (req, res) => {
+  await Product.deleteMany({});
+  const products = await Product.insertMany(productsData);
+  res.status(201).json(products);
+});
 
 module.exports = {
   getAllProducts,
@@ -195,4 +229,7 @@ module.exports = {
   getRecommendedProducts,
   searchProducts,
   getProductsByCategory,
+  getAllCategories,
+  getProducts,
+  importProducts,
 };

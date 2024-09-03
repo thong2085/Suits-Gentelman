@@ -20,40 +20,48 @@ import OrderListPage from "./pages/OrderListPage";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import SearchResultsPage from "./pages/SearchResultsPage";
 import CategoryPage from "./pages/CategoryPage";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import AdminOrderDetail from "./components/AdminOrderDetail";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="products" element={<ProductListPage />} />
-          <Route path="product/:id" element={<ProductDetailPage />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="checkout" element={<CheckoutPage />} />
-          <Route
-            path="order-confirmation"
-            element={<OrderConfirmationPage />}
-          />
-          <Route path="profile" element={<UserProfilePage />} />
-          <Route path="orders" element={<OrderListPage />} />
-          <Route path="order/:id" element={<OrderDetailPage />} />
-          <Route path="search" element={<SearchResultsPage />} />
-          <Route path="category/:category" element={<CategoryPage />} />
-        </Route>
+    <PayPalScriptProvider
+      options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID }}
+    >
+      <Router>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="products" element={<ProductListPage />} />
+            <Route path="product/:id" element={<ProductDetailPage />} />
+            <Route path="cart" element={<CartPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="checkout" element={<CheckoutPage />} />
+            <Route
+              path="order-confirmation"
+              element={<OrderConfirmationPage />}
+            />
 
-        <Route element={<ProtectedRoute isAdmin={true} />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<ProductList />} />
-            <Route path="orders" element={<OrderList />} />
-            <Route path="users" element={<UserList />} />
+            <Route path="profile" element={<UserProfilePage />} />
+            <Route path="search" element={<SearchResultsPage />} />
+            <Route path="category/:category" element={<CategoryPage />} />
+            <Route path="/orders" element={<OrderListPage />} />
+            <Route path="/order/:id" element={<OrderDetailPage />} />
           </Route>
-        </Route>
-      </Routes>
-    </Router>
+
+          <Route element={<ProtectedRoute adminOnly={true} />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="products" element={<ProductList />} />
+              <Route path="orders" element={<OrderList />} />
+              <Route path="/admin/orders/:id" element={<AdminOrderDetail />} />
+              <Route path="users" element={<UserList />} />
+            </Route>
+          </Route>
+        </Routes>
+      </Router>
+    </PayPalScriptProvider>
   );
 }
 

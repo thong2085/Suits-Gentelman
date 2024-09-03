@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -18,7 +20,7 @@ const LoginPage = () => {
 
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Login</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("login")}</h1>
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -56,7 +58,7 @@ const LoginPage = () => {
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           disabled={loading}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? t("loggingIn") : t("login")}
         </button>
       </form>
     </div>

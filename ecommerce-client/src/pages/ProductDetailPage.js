@@ -3,8 +3,10 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../features/products/productSlice";
 import { addToCart } from "../features/cart/cartSlice";
+import { useTranslation } from "react-i18next";
 
 const ProductDetailPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
   const { product, loading, error } = useSelector((state) => state.products);
@@ -18,8 +20,13 @@ const ProductDetailPage = () => {
     dispatch(addToCart({ ...product, quantity }));
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>{t("loading")}</div>;
+  if (error)
+    return (
+      <div>
+        {t("error")}: {error}
+      </div>
+    );
   if (!product) return null;
 
   return (
@@ -38,7 +45,7 @@ const ProductDetailPage = () => {
           <p className="mb-4">{product.description}</p>
           <div className="flex items-center mb-4">
             <label htmlFor="quantity" className="mr-2">
-              Quantity:
+              {t("quantity")}:
             </label>
             <input
               type="number"
@@ -53,7 +60,7 @@ const ProductDetailPage = () => {
             onClick={handleAddToCart}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
           >
-            Add to Cart
+            {t("addToCart")}
           </button>
         </div>
       </div>

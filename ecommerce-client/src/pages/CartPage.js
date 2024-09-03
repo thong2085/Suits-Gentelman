@@ -1,10 +1,17 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { removeFromCart, updateQuantity } from "../features/cart/cartSlice";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+} from "../features/cart/cartSlice";
+import { useTranslation } from "react-i18next";
 
 const CartPage = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
 
   const handleRemoveItem = (id) => {
@@ -20,14 +27,18 @@ const CartPage = () => {
     0
   );
 
+  const handleCheckout = () => {
+    navigate("/checkout");
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
+      <h1 className="text-3xl font-bold mb-8">{t("yourCart")}</h1>
       {cartItems.length === 0 ? (
         <p>
-          Your cart is empty.{" "}
+          {t("emptyCart")}{" "}
           <Link to="/products" className="text-blue-500">
-            Go shopping
+            {t("goShopping")}
           </Link>
         </p>
       ) : (
@@ -66,18 +77,20 @@ const CartPage = () => {
                 onClick={() => handleRemoveItem(item._id)}
                 className="text-red-500"
               >
-                Remove
+                {t("remove")}
               </button>
             </div>
           ))}
           <div className="mt-8">
-            <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
-            <Link
-              to="/checkout"
+            <p className="text-xl font-bold">
+              {t("total")}: ${totalPrice.toFixed(2)}
+            </p>
+            <button
+              onClick={handleCheckout}
               className="bg-blue-500 text-white px-4 py-2 rounded mt-4 inline-block"
             >
-              Proceed to Checkout
-            </Link>
+              {t("proceedToCheckout")}
+            </button>
           </div>
         </>
       )}

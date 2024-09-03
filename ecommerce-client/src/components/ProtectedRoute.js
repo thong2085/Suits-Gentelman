@@ -5,13 +5,15 @@ import { useSelector } from "react-redux";
 const ProtectedRoute = ({ isAdmin = false }) => {
   const { userInfo } = useSelector((state) => state.auth);
 
-  if (!userInfo) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (isAdmin && !userInfo.role === "admin") {
-    return <Navigate to="/" replace />;
-  }
+  return userInfo?.token ? (
+    userInfo?.isAdmin ? (
+      <Outlet />
+    ) : (
+      <Navigate to="/*" />
+    )
+  ) : (
+    <Navigate to="*" />
+  );
 
   return <Outlet />;
 };

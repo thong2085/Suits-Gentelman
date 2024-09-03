@@ -1,4 +1,3 @@
-// models/Product.js
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
@@ -29,12 +28,12 @@ const reviewSchema = new mongoose.Schema(
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    image: { type: String, required: true },
-    brand: { type: String, required: true },
-    category: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    countInStock: { type: Number, required: true },
+    category: { type: String, required: true }, // Thêm trường category
+    image: { type: String, required: true },
+    brand: { type: String, required: true },
+    countInStock: { type: Number, required: true, default: 0 },
     rating: { type: Number, required: true, default: 0 },
     numReviews: { type: Number, required: true, default: 0 },
     reviews: [reviewSchema],
@@ -44,4 +43,6 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);
+
+module.exports = Product;

@@ -1,3 +1,5 @@
+const asyncHandler = require("express-async-handler");
+
 // controllers/orderController.js
 const Order = require("../models/Order");
 
@@ -64,23 +66,27 @@ const createOrder = async (req, res) => {
 };
 
 // Cập nhật trạng thái đơn hàng
-const updateOrderStatus = async (req, res) => {
+const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    order.isDelivered = req.body.isDelivered;
-    order.deliveredAt = req.body.isDelivered ? Date.now() : null;
+    order.status = req.body.status;
+
+    if (req.body.status === "shipped" && !order.shippedAt) {
+      order.shippedAt = Date.now();
+    }
+
+    if (req.body.status === "cancelled" && !order.cancelledAt) {
+      order.cancelledAt = Date.now();
+    }
 
     const updatedOrder = await order.save();
-
-    // Gửi thông báo cho admin
-    req.io.emit("orderStatusChanged", updatedOrder);
-
     res.json(updatedOrder);
   } else {
-    res.status(404).json({ message: "Order not found" });
+    res.status(404);
+    throw new Error("Order not found");
   }
-};
+});
 
 const deleteOrderStatus = async (req, res) => {
   try {
@@ -107,6 +113,53 @@ const getMyOrders = async (req, res) => {
   }
 };
 
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      email_address: req.body.payer.email_address,
+    };
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
+
+const cancelOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+
+  // Kiểm tra xem người dùng có quyền hủy đơn hàng không
+  if (order.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
+    res.status(403);
+    throw new Error("User not authorized to cancel this order");
+  }
+
+  if (order.status !== "processing") {
+    res.status(400);
+    throw new Error("Order cannot be cancelled");
+  }
+
+  order.status = "cancelled";
+  const updatedOrder = await order.save();
+
+  res.json(updatedOrder);
+});
+
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -114,4 +167,6 @@ module.exports = {
   updateOrderStatus,
   deleteOrderStatus,
   getMyOrders,
+  updateOrderToPaid,
+  cancelOrder,
 };

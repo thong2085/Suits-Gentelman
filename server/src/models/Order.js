@@ -15,7 +15,7 @@ const orderSchema = new mongoose.Schema(
     orderItems: [
       {
         name: { type: String, required: true },
-        qty: { type: Number, required: true },
+        quantity: { type: Number, required: true }, // Thay đổi từ 'qty' thành 'quantity'
         price: { type: Number, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,
@@ -33,6 +33,7 @@ const orderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
+      enum: ["PayPal", "COD"], // Add COD as a payment method
     },
     paymentResult: {
       id: String,
@@ -54,11 +55,22 @@ const orderSchema = new mongoose.Schema(
     },
     isDelivered: {
       type: Boolean,
-      required: true,
       default: false,
     },
     deliveredAt: {
       type: Date,
+    },
+    shippedAt: {
+      type: Date,
+    },
+    cancelledAt: {
+      type: Date,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ["processing", "shipped", "delivered", "cancelled"],
+      default: "processing",
     },
   },
   {
