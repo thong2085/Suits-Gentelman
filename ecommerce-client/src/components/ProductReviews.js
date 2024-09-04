@@ -8,13 +8,11 @@ const ProductReviews = React.memo(({ productId }) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
-  const { reviews, reviewsLoading, reviewsError } = useSelector(
-    (state) => state.products
-  );
+  const { reviews, reviewsLoading } = useSelector((state) => state.products);
   const { userInfo } = useSelector((state) => state.auth);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
-  const [submitError, setSubmitError] = useState(null);
+  const [submitError] = useState(null);
   const [userHasReviewed, setUserHasReviewed] = useState(false);
 
   useEffect(() => {
@@ -50,7 +48,7 @@ const ProductReviews = React.memo(({ productId }) => {
         })
         .catch((error) => {});
     },
-    [dispatch, productId, rating, comment, t]
+    [dispatch, productId, rating, comment, t, userHasReviewed]
   );
 
   const renderStars = (rating) => {

@@ -1,11 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  removeFromCart,
-  updateQuantity,
-  clearCart,
-} from "../features/cart/cartSlice";
+import { removeFromCart, updateQuantity } from "../features/cart/cartSlice";
 import { useTranslation } from "react-i18next";
 import { formatCurrency } from "../utils/formatCurrency";
 

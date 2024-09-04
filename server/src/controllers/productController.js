@@ -243,7 +243,7 @@ const getTopReviews = async (req, res) => {
       { $unwind: "$reviews" },
       { $match: { "reviews.rating": { $gte: 4 } } },
       { $sort: { "reviews.rating": -1, "reviews.createdAt": -1 } },
-      { $limit: 5 },
+      { $limit: 3 },
       {
         $lookup: {
           from: "users",

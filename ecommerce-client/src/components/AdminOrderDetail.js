@@ -17,7 +17,7 @@ const AdminOrderDetail = () => {
     order?.status || "processing"
   );
   const [isUpdating, setIsUpdating] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [setCurrentStep] = useState(0);
 
   useEffect(() => {
     dispatch(fetchOrderById(id));
@@ -41,7 +41,7 @@ const AdminOrderDetail = () => {
         setCurrentStep(3);
       }
     }
-  }, [order]);
+  }, [order, setCurrentStep]);
 
   const steps = order
     ? [

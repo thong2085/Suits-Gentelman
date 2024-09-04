@@ -181,5 +181,20 @@
   "orderCreatedSuccessfully": "Đặt hàng thành công",
   "errorCreatingOrder": "Lỗi khi tạo đơn hàng",
   "errorFetchingProducts": "Lỗi khi tải sản phẩm",
-  "errorFetchingCategories": "Lỗi khi tải danh mục"
+  "errorFetchingCategories": "Lỗi khi tải danh mục",
+  "passwordMustBeAtLeast6Characters": "Mật khẩu phải có ít nhất 6 ký tự",
+  "nameMustBeAtLeast2Characters": "Tên phải có ít nhất 2 ký tự",
+  "emailMustBeValid": "Email phải là một địa chỉ email hợp lệ",
+  "passwordsMustMatch": "Mật khẩu phải khớp",
+  "nameValidationError": "Tên phải có ít nhất 2 ký tự",
+  "emailValidationError": "Email không hợp lệ",
+  "passwordValidationError": "Mật khẩu phải có ít nhất 6 ký tự",
+  "pleaseFixErrors": "Vui lòng sửa các lỗi trước khi tiếp tục",
+  "invalidName": "Tên không hợp lệ",
+  "invalidEmail": "Email không hợp lệ",
+  "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự",
+  "userAlreadyExists": "Người dùng đã tồn tại",
+  "invalidUserData": "Dữ liệu người dùng không hợp lệ",
+  "invalidEmailOrPassword": "Email hoặc mật khẩu không đúng",
+  "fieldRequired": " Bắt buộc không được để trống"
 }

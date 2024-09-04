@@ -6,6 +6,11 @@ const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
 const nodemailer = require("nodemailer");
 const Product = require("../models/Product");
+const {
+  validateEmail,
+  validatePassword,
+  validateName,
+} = require("../utils/validation");
 
 // Tạo token
 const generateToken = (id) => {
@@ -17,10 +22,22 @@ const generateToken = (id) => {
 // Đăng ký user mới
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+
+  // Validation
+  if (!validateName(name)) {
+    return res.status(400).json({ message: "invalidName" });
+  }
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: "invalidEmail" });
+  }
+  if (!validatePassword(password)) {
+    return res.status(400).json({ message: "passwordTooShort" });
+  }
+
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    return res.status(400).json({ message: "User already exists" });
+    return res.status(400).json({ message: "userAlreadyExists" });
   }
 
   const user = await User.create({
@@ -37,13 +54,19 @@ const registerUser = async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(400).json({ message: "Invalid user data" });
+    res.status(400).json({ message: "invalidUserData" });
   }
 };
 
 // Đăng nhập user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  // Validation
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: "invalidEmail" });
+  }
+
   const user = await User.findOne({ email });
 
   if (user && (await bcryptjs.compare(password, user.password))) {
@@ -55,8 +78,7 @@ const loginUser = async (req, res) => {
       token: generateToken(user._id, user.role),
     });
   } else {
-    res.status(401);
-    throw new Error("Invalid email or password");
+    res.status(401).json({ message: "invalidEmailOrPassword" });
   }
 };
 
