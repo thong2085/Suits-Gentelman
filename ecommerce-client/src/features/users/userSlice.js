@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axios";
+import { toast } from "react-toastify";
+import i18n from "../../i18n"; // Giả sử bạn đã cấu hình i18n
+
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (_, { rejectWithValue }) => {
@@ -7,27 +10,41 @@ export const fetchUsers = createAsyncThunk(
       const { data } = await axiosInstance.get("/api/users");
       return data;
     } catch (error) {
-      console.error(
-        "Error fetching users:",
-        error.response?.data || error.message
+      toast.error(
+        i18n.t("errorFetchingUsers", "Lỗi khi tải danh sách người dùng")
       );
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
 
-export const deleteUser = createAsyncThunk("users/deleteUser", async (id) => {
-  await axiosInstance.delete(`/api/users/${id}`);
-  return id;
-});
+export const deleteUser = createAsyncThunk(
+  "users/deleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(`/api/users/${id}`);
+      toast.success(
+        i18n.t("userDeletedSuccessfully", "Xóa người dùng thành công")
+      );
+      return id;
+    } catch (error) {
+      toast.error(i18n.t("errorDeletingUser", "Lỗi khi xóa người dùng"));
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
 
 export const updateUser = createAsyncThunk(
   "users/updateUser",
   async ({ id, userData }, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.put(`/api/users/${id}`, userData);
+      toast.success(
+        i18n.t("userUpdatedSuccessfully", "Cập nhật người dùng thành công")
+      );
       return data;
     } catch (error) {
+      toast.error(i18n.t("errorUpdatingUser", "Lỗi khi cập nhật người dùng"));
       return rejectWithValue(error.response.data.message);
     }
   }

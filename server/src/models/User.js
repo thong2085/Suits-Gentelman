@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema(
         ref: "Product",
       },
     ],
+    phoneNumber: { type: String, required: false },
   },
   {
     timestamps: true,

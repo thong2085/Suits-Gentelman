@@ -34,6 +34,7 @@
   "logout": "Đăng xuất",
   "login": "Đăng nhập",
   "ecommerce": "Thương mại điện tử",
+  "phoneNumber": "Số điện thoại",
 
   "register": "Đăng ký",
   "name": "Tên",
@@ -136,6 +137,7 @@
   "paidAt": "Ngày thanh toán",
   "deliveredAt": "Ngày giao hàng",
   "confirmCancelOrder": "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+  "placeOrder": "Đặt hàng",
 
   "featuredCategories": "Danh mục nổi bật",
   "featuredProducts": "Sản phẩm nổi bật",
@@ -157,5 +159,27 @@
   "Rating:": "Đánh giá:",
   "Customer Reviews": "Đánh giá khách hàng",
   "Write a Review": "Viết đánh giá",
-  "No reviews yet. Be the first to review this product!": "Không có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!"
+  "No reviews yet. Be the first to review this product!": "Không có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!",
+
+  "pleaseLoginToCheckout": "Vui lòng đăng nhập để tiến hành thanh toán",
+  "createAccount": "Tạo tài khoản",
+  "signInToYourAccount": "Đăng nhập tài khoản",
+  "alreadyHaveAccount": "Bạn đã có tài khoản?",
+  "dontHaveAccount": "Bạn không có tài khoản?",
+  "signUp": "Đăng ký",
+  "pageNotFound": "Trang không tồn tại",
+  "pageNotFoundMessage": "Trang bạn đang tìm kiếm không tồn tại. Vui lòng kiểm tra lại địa chỉ URL hoặc quay lại trang chủ.",
+  "backToHome": "Quay lại trang chủ",
+  "errorLoadingReviews": "Lỗi khi tải đánh giá:",
+  "reviewSubmittedSuccessfully": "Đánh giá đã được gửi thành công",
+  "You have already reviewed this product.": "Bạn đã đánh giá sản phẩm này rồi.",
+  "errorFetchingUsers": "Lỗi khi tải danh sách người dùng",
+  "userDeletedSuccessfully": "Xóa người dùng thành công",
+  "errorDeletingUser": "Lỗi khi xóa người dùng",
+  "userUpdatedSuccessfully": "Cập nhật người dùng thành công",
+  "errorUpdatingUser": "Lỗi khi cập nhật người dùng",
+  "orderCreatedSuccessfully": "Đặt hàng thành công",
+  "errorCreatingOrder": "Lỗi khi tạo đơn hàng",
+  "errorFetchingProducts": "Lỗi khi tải sản phẩm",
+  "errorFetchingCategories": "Lỗi khi tải danh mục"
 }

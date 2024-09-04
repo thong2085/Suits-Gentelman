@@ -115,9 +115,9 @@ const OrderDetailPage = () => {
             {order.orderItems?.map((item) => (
               <li key={item._id} className="flex items-center mb-2">
                 <img
-                  src={item?.image}
+                  src={item.image}
                   alt={item.name}
-                  className="w-12 h-12 rounded mr-4"
+                  className="w-12 h-12 object-cover rounded mr-4"
                 />
                 <div className="flex-grow">
                   <span className="block">{item.name}</span>

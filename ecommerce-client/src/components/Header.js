@@ -65,15 +65,6 @@ const Header = () => {
             {userInfo ? (
               <>
                 <li>
-                  <Link
-                    to="/profile"
-                    className="flex items-center hover:text-secondary transition duration-300"
-                  >
-                    <UserCircleIcon className="w-5 h-5 mr-1" />
-                    {t("profile")}
-                  </Link>
-                </li>
-                <li>
                   <form onSubmit={handleOrderSearch} className="flex">
                     <input
                       type="text"
@@ -89,6 +80,15 @@ const Header = () => {
                       {t("search")}
                     </button>
                   </form>
+                </li>
+                <li>
+                  <Link
+                    to="/profile"
+                    className="flex items-center hover:text-secondary transition duration-300"
+                  >
+                    <UserCircleIcon className="w-5 h-5 mr-1" />
+                    {t("profile")}
+                  </Link>
                 </li>
                 <li>
                   <button

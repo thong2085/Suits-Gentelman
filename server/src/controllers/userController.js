@@ -85,6 +85,7 @@ const updateUser = async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
+    user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
 
     if (req.body.password) {
       user.password = await bcryptjs.hash(req.body.password, 10);
@@ -96,6 +97,7 @@ const updateUser = async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      phoneNumber: updatedUser.phoneNumber,
       token: generateToken(updatedUser._id),
     });
   } else {

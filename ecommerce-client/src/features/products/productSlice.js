@@ -1,16 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axios";
+import { toast } from "react-toastify";
+import i18n from "../../i18n";
+
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async ({ keyword = "", category = null }, { rejectWithValue }) => {
+  async ({ category = "" } = {}, { rejectWithValue }) => {
     try {
-      let url = `/api/products?keyword=${keyword}`;
+      let url = "/api/products";
       if (category) {
-        url += `&category=${encodeURIComponent(category)}`;
+        url += `?category=${encodeURIComponent(category)}`;
       }
       const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
+      toast.error(i18n.t("errorFetchingProducts", "Lỗi khi tải sản phẩm"));
       return rejectWithValue(error.response.data);
     }
   }
@@ -70,6 +74,9 @@ export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (productData) => {
     const { data } = await axiosInstance.post("/api/products", productData);
+    toast.success(
+      i18n.t("productCreatedSuccessfully", "Tạo sản phẩm thành công")
+    );
     return data;
   }
 );
@@ -80,6 +87,9 @@ export const updateProduct = createAsyncThunk(
     const { data } = await axiosInstance.put(
       `/api/products/${id}`,
       productData
+    );
+    toast.success(
+      i18n.t("productUpdatedSuccessfully", "Cập nhật sản phẩm thành công")
     );
     return data;
   }
@@ -93,17 +103,28 @@ export const addReview = createAsyncThunk(
         `/api/products/${productId}/reviews`,
         { rating, comment }
       );
+      toast.success(
+        i18n.t("reviewSubmittedSuccessfully", "Đánh giá đã được gửi thành công")
+      );
       return response.data;
     } catch (error) {
       if (
-        error.response &&
-        error.response.data.message === "Product already reviewed"
+        toast.error(
+          i18n.t(
+            "You have already reviewed this product.",
+            "Bạn đã đánh giá sản phẩm này rồi."
+          )
+        )
       ) {
         return rejectWithValue("You have already reviewed this product.");
       }
       return rejectWithValue(
-        error.response?.data?.message ||
-          "An error occurred while submitting the review."
+        toast.error(
+          i18n.t(
+            "An error occurred while submitting the review.",
+            "Đã xảy ra lỗi khi gửi đánh giá."
+          )
+        )
       );
     }
   }
@@ -209,7 +230,6 @@ const productSlice = createSlice({
         state.reviewsError = action.payload;
       })
       .addCase(getReviews.fulfilled, (state, action) => {
-        console.log("getReviews.fulfilled payload:", action.payload);
         state.reviewsLoading = false;
         state.reviews = action.payload;
       })

@@ -184,3 +184,6 @@ select:focus {
 .step.current .step-indicator {
   background-color: #2196f3;
 }
+.bg-accent {
+  background-color: #1b1b1b;
+}
