@@ -209,7 +209,9 @@ const getAllCategories = async (req, res) => {
 // Thêm phương thức mới để lấy sản phẩm theo danh mục
 const getProducts = async (req, res) => {
   try {
-    const { keyword, category } = req.query;
+    const { keyword, category, page = 1, limit = 6 } = req.query;
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
 
     let query = {};
     if (keyword) {
@@ -219,14 +221,19 @@ const getProducts = async (req, res) => {
       query.category = { $regex: new RegExp(`^${category}$`, "i") };
     }
 
-    const products = await Product.find(query);
-    console.log(
-      "Products found:",
-      products.length,
-      products.map((p) => ({ name: p.name, category: p.category }))
-    );
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limitNumber);
 
-    res.json(products);
+    const products = await Product.find(query)
+      .limit(limitNumber)
+      .skip((pageNumber - 1) * limitNumber);
+
+    res.json({
+      products,
+      page: pageNumber,
+      pages: totalPages,
+      totalProducts,
+    });
   } catch (error) {
     console.error("Error in getProducts:", error);
     res.status(500).json({ message: "Server Error" });
