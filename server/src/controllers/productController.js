@@ -210,7 +210,6 @@ const getAllCategories = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { keyword, category } = req.query;
-    console.log("Received query:", { keyword, category });
 
     let query = {};
     if (keyword) {
@@ -219,8 +218,6 @@ const getProducts = async (req, res) => {
     if (category) {
       query.category = { $regex: new RegExp(`^${category}$`, "i") };
     }
-
-    console.log("MongoDB query:", query);
 
     const products = await Product.find(query);
     console.log(
@@ -238,9 +235,6 @@ const getProducts = async (req, res) => {
 
 const getTopReviews = async (req, res) => {
   try {
-    console.log("Starting getTopReviews function");
-    console.log("Product model:", Product);
-
     if (!Product || typeof Product.aggregate !== "function") {
       throw new Error("Product model is not properly defined or imported");
     }
@@ -269,15 +263,12 @@ const getTopReviews = async (req, res) => {
       },
     ]);
 
-    console.log("Aggregation result:", topReviews);
-
     if (topReviews.length === 0) {
       return res.status(404).json({ message: "No top reviews found" });
     }
 
     res.json(topReviews);
   } catch (error) {
-    console.error("Error in getTopReviews:", error);
     res
       .status(500)
       .json({ message: "Error fetching top reviews", error: error.message });
@@ -289,6 +280,39 @@ const importProducts = asyncHandler(async (req, res) => {
   const products = await Product.insertMany(productsData);
   res.status(201).json(products);
 });
+
+const getFeaturedProducts = async (req, res) => {
+  try {
+    const featuredProducts = await Product.aggregate([
+      { $match: { numReviews: { $gt: 0 } } },
+      { $sort: { rating: -1, numReviews: -1 } },
+      { $limit: 6 },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          price: 1,
+          image: 1,
+          category: 1,
+          rating: 1,
+          numReviews: 1,
+        },
+      },
+    ]);
+
+    if (featuredProducts.length === 0) {
+      return res.status(404).json({ message: "No featured products found" });
+    }
+
+    res.json(featuredProducts);
+  } catch (error) {
+    console.error("Error in getFeaturedProducts:", error);
+    res.status(500).json({
+      message: "Failed to fetch featured products",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   getAllProducts,
@@ -305,4 +329,5 @@ module.exports = {
   getProducts,
   importProducts,
   getTopReviews,
+  getFeaturedProducts,
 };

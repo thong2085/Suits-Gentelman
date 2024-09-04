@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { toast } from "react-toastify";
+import i18n from "../../i18n";
+import axiosInstance from "../../api/axios";
 
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/products/categories");
+      const response = await axiosInstance.get("/api/products/categories");
       return response.data;
     } catch (error) {
+      toast.error(i18n.t("errorFetchingCategories", "Lỗi khi tải danh mục"));
       return rejectWithValue(error.response.data);
     }
   }

@@ -22,12 +22,16 @@ import SearchResultsPage from "./pages/SearchResultsPage";
 import CategoryPage from "./pages/CategoryPage";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import AdminOrderDetail from "./components/AdminOrderDetail";
+import NotFoundPage from "./pages/NotFoundPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <PayPalScriptProvider
       options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID }}
     >
+      <ToastContainer />
       <Router>
         <Routes>
           <Route element={<MainLayout />}>
@@ -49,7 +53,7 @@ function App() {
             <Route path="/orders" element={<OrderListPage />} />
             <Route path="/order/:id" element={<OrderDetailPage />} />
           </Route>
-
+          <Route path="*" element={<NotFoundPage />} />
           <Route element={<ProtectedRoute adminOnly={true} />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />

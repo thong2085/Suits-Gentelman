@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getReviews, addReview } from "../features/products/productSlice";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 const ProductReviews = React.memo(({ productId }) => {
   const { t } = useTranslation();
@@ -10,44 +11,46 @@ const ProductReviews = React.memo(({ productId }) => {
   const { reviews, reviewsLoading, reviewsError } = useSelector(
     (state) => state.products
   );
-  const { user } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [submitError, setSubmitError] = useState(null);
   const [userHasReviewed, setUserHasReviewed] = useState(false);
 
   useEffect(() => {
-    dispatch(getReviews(productId));
-  }, [dispatch, productId]);
+    dispatch(getReviews(productId))
+      .unwrap()
+      .catch((error) => {
+        toast.error(t(error.message || "Error loading reviews"));
+      });
+  }, [dispatch, productId, t]);
 
   useEffect(() => {
     // Check if the user has already reviewed this product
-    if (reviews && reviews.length > 0 && user) {
-      const userReview = reviews.find((review) => review.user === user._id);
+    if (reviews && reviews.length > 0 && userInfo) {
+      const userReview = reviews.find((review) => review.user === userInfo._id);
       setUserHasReviewed(!!userReview);
     }
-  }, [reviews, user]);
+  }, [reviews, userInfo]);
 
   const handleSubmitReview = useCallback(
     (e) => {
       e.preventDefault();
+      if (userHasReviewed) {
+        toast.error(t("You have already reviewed this product."));
+        return;
+      }
       dispatch(addReview({ productId, rating, comment }))
         .unwrap()
         .then(() => {
           setRating(5);
           setComment("");
-          setSubmitError(null);
           setUserHasReviewed(true);
           dispatch(getReviews(productId));
         })
-        .catch((error) => {
-          console.error("Error submitting review:", error);
-          setSubmitError(
-            error.message || "An error occurred while submitting the review."
-          );
-        });
+        .catch((error) => {});
     },
-    [dispatch, productId, rating, comment]
+    [dispatch, productId, rating, comment, t]
   );
 
   const renderStars = (rating) => {
@@ -55,13 +58,7 @@ const ProductReviews = React.memo(({ productId }) => {
   };
 
   if (reviewsLoading)
-    return <div className="text-center py-4">Loading reviews...</div>;
-  if (reviewsError)
-    return (
-      <div className="text-center py-4 text-red-500">
-        Error loading reviews: {reviewsError}
-      </div>
-    );
+    return <div className="text-center py-4">{t("Loading reviews...")}</div>;
 
   return (
     <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
@@ -87,7 +84,7 @@ const ProductReviews = React.memo(({ productId }) => {
           {t("No reviews yet. Be the first to review this product!")}
         </p>
       )}
-      {user && !userHasReviewed ? (
+      {userInfo && !userHasReviewed ? (
         <form onSubmit={handleSubmitReview} className="mt-8">
           <h4 className="text-xl font-semibold mb-4">{t("Write a Review")}</h4>
           {submitError && <p className="text-red-500 mb-4">{submitError}</p>}
@@ -98,7 +95,7 @@ const ProductReviews = React.memo(({ productId }) => {
             <div className="flex">
               {[1, 2, 3, 4, 5].map((value) => (
                 <button
-                  key={value}
+                  key={`star-${value}`} // Thêm key prop ở đây
                   type="button"
                   onClick={() => setRating(value)}
                   className={`text-2xl ${
@@ -130,7 +127,7 @@ const ProductReviews = React.memo(({ productId }) => {
             {t("submitReview")}
           </button>
         </form>
-      ) : user ? (
+      ) : userInfo ? (
         <p className="mt-8 text-green-600">{t("Thank you for your review!")}</p>
       ) : (
         <p className="mt-8 text-blue-600">

@@ -41,29 +41,41 @@ const getOrderById = async (req, res) => {
 };
 
 // Tạo đơn hàng mới
-const createOrder = async (req, res) => {
-  const { orderItems, shippingAddress, paymentMethod, totalPrice } = req.body;
-
-  if (orderItems && orderItems.length === 0) {
-    res.status(400).json({ message: "No order items" });
-    return;
-  }
-
-  const order = new Order({
-    user: req.user._id,
+const createOrder = asyncHandler(async (req, res) => {
+  const {
     orderItems,
     shippingAddress,
     paymentMethod,
+    itemsPrice,
+    taxPrice,
+    shippingPrice,
     totalPrice,
-  });
+  } = req.body;
 
-  const createdOrder = await order.save();
+  if (orderItems && orderItems.length === 0) {
+    res.status(400);
+    throw new Error("No order items");
+  } else {
+    const order = new Order({
+      orderItems: orderItems.map((x) => ({
+        ...x,
+        product: x.product,
+        image: x.image, // Đảm bảo trường image được bao gồm
+        _id: undefined,
+      })),
+      user: req.user._id,
+      shippingAddress,
+      paymentMethod,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+    });
 
-  // Gửi thông báo cho admin
-  req.io.emit("newOrder", createdOrder);
-
-  res.status(201).json(createdOrder);
-};
+    const createdOrder = await order.save();
+    res.status(201).json(createdOrder);
+  }
+});
 
 // Cập nhật trạng thái đơn hàng
 const updateOrderStatus = asyncHandler(async (req, res) => {

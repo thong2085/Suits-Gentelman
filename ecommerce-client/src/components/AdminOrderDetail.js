@@ -6,6 +6,7 @@ import {
   updateOrderStatus,
 } from "../features/orders/orderSlice";
 import { useTranslation } from "react-i18next";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const AdminOrderDetail = () => {
   const { t } = useTranslation();
@@ -127,7 +128,7 @@ const AdminOrderDetail = () => {
             </p>
             <p>
               <span className="font-semibold">{t("totalPrice")}:</span>{" "}
-              {order.totalPrice?.toFixed(2)} đ
+              {formatCurrency(order.totalPrice)}
             </p>
             <p>
               <span className="font-semibold">{t("isPaid")}:</span>{" "}
@@ -161,9 +162,7 @@ const AdminOrderDetail = () => {
             {order.orderItems?.map((item) => (
               <li key={item._id} className="flex items-center mb-2">
                 <img
-                  src={`${
-                    process.env.REACT_APP_API_URL || "http://localhost:5000"
-                  }${item.image}`}
+                  src={item.image}
                   alt={item.name}
                   className="w-12 h-12 object-cover rounded mr-4"
                 />
@@ -173,7 +172,7 @@ const AdminOrderDetail = () => {
                     {t("quantity")}: {item.quantity}
                   </span>
                   <span className="block">
-                    {t("price")}: ${item.price.toFixed(2)}
+                    {t("price")}: {formatCurrency(item.price)}
                   </span>
                 </div>
               </li>

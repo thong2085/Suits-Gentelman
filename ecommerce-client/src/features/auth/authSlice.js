@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axios";
+import i18n from "../../i18n";
+import { toast } from "react-toastify";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -10,8 +12,10 @@ export const login = createAsyncThunk(
         credentials
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
+      toast.success(i18n.t("loginSuccessfully", "Đăng nhập thành công"));
       return data;
     } catch (error) {
+      toast.error(i18n.t("errorLoggingIn", "Lỗi khi đăng nhập"));
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -26,8 +30,10 @@ export const register = createAsyncThunk(
         userData
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
+      toast.success(i18n.t("registerSuccessfully", "Đăng ký thành công"));
       return data;
     } catch (error) {
+      toast.error(i18n.t("errorRegistering", "Lỗi khi đăng ký"));
       return rejectWithValue(error.response.data.message);
     }
   }
@@ -39,14 +45,19 @@ export const updateUserProfile = createAsyncThunk(
     try {
       const { data } = await axiosInstance.put("/api/users/profile", userData);
       localStorage.setItem("userInfo", JSON.stringify(data));
+      toast.success(
+        i18n.t("userUpdatedSuccessfully", "Cập nhật người dùng thành công")
+      );
       return data;
     } catch (error) {
+      toast.error(i18n.t("errorUpdatingUser", "Lỗi khi cập nhật người dùng"));
       return rejectWithValue(error.response.data.message);
     }
   }
 );
 
 export const logout = createAsyncThunk("auth/logout", async () => {
+  toast.success(i18n.t("logoutSuccessfully", "Đăng xuất thành công"));
   localStorage.removeItem("userInfo");
 });
 

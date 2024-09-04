@@ -7,6 +7,7 @@ import {
   clearCart,
 } from "../features/cart/cartSlice";
 import { useTranslation } from "react-i18next";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const CartPage = () => {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ const CartPage = () => {
               />
               <div className="flex-grow">
                 <h2 className="text-xl font-semibold">{item.name}</h2>
-                <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                <p className="text-gray-600">{formatCurrency(item.price)}</p>
                 <div className="flex items-center mt-2">
                   <button
                     onClick={() =>
@@ -83,7 +84,7 @@ const CartPage = () => {
           ))}
           <div className="mt-8">
             <p className="text-xl font-bold">
-              {t("total")}: ${totalPrice.toFixed(2)}
+              {t("total")}: {formatCurrency(totalPrice)}
             </p>
             <button
               onClick={handleCheckout}
