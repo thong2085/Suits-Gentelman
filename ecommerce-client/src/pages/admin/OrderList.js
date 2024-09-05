@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchOrders } from "../../features/orders/orderSlice";
+import { deleteOrder, fetchOrders } from "../../features/orders/orderSlice";
 import { useTranslation } from "react-i18next";
 import { formatCurrency } from "../../utils/formatCurrency";
 
@@ -45,6 +45,11 @@ const OrderList = () => {
         return "text-gray-600";
     }
   };
+  const handleDeleteOrder = (orderCode) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này không?")) {
+      dispatch(deleteOrder(orderCode));
+    }
+  };
 
   return (
     <div>
@@ -66,8 +71,8 @@ const OrderList = () => {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id}>
-                <td title={order._id}>{order._id}</td>
+              <tr key={order.orderCode}>
+                <td title={order.orderCode}>{order.orderCode}</td>
                 <td>{getUserInfo(order)}</td>
                 <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td>
@@ -96,6 +101,12 @@ const OrderList = () => {
                   >
                     {t("details")}
                   </Link>
+                  <button
+                    onClick={() => handleDeleteOrder(order.orderCode)}
+                    className="text-red-500 hover:underline ml-2"
+                  >
+                    {t("delete")}
+                  </button>
                 </td>
               </tr>
             ))}

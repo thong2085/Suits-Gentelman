@@ -66,6 +66,7 @@ const ProductList = () => {
             <tr>
               <th className="py-2 px-4 border-b">{t("id")}</th>
               <th className="py-2 px-4 border-b">{t("name")}</th>
+              <th className="py-2 px-4 border-b">{t("image")}</th>
               <th className="py-2 px-4 border-b">{t("price")}</th>
               <th className="py-2 px-4 border-b">{t("category")}</th>
               <th className="py-2 px-4 border-b">{t("actions")}</th>
@@ -77,6 +78,17 @@ const ProductList = () => {
                 <tr key={product._id}>
                   <td className="py-2 px-4 border-b">{product._id}</td>
                   <td className="py-2 px-4 border-b">{product.name}</td>
+                  <td className="py-2 px-4 border-b">
+                    <img
+                      src={
+                        Array.isArray(product.images)
+                          ? product.images[0]
+                          : product.images
+                      }
+                      alt={product.name}
+                      className="w-10 h-10 object-cover"
+                    />
+                  </td>
                   <td className="py-2 px-4 border-b">
                     {formatCurrency(product.price)}
                   </td>
