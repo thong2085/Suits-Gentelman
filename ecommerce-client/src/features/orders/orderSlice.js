@@ -68,6 +68,23 @@ export const updateOrderStatus = createAsyncThunk(
   }
 );
 
+export const deleteOrder = createAsyncThunk(
+  "orders/deleteOrder",
+  async (orderCode, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(`/api/orders/${orderCode}`);
+      toast.success(
+        i18n.t("orderDeletedSuccessfully", "Xóa đơn hàng thành công")
+      );
+      return orderCode;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Lỗi khi xóa đơn hàng"
+      );
+    }
+  }
+);
+
 export const payOrder = createAsyncThunk(
   "orders/payOrder",
   async ({ orderCode, paymentResult }, { rejectWithValue }) => {
@@ -163,6 +180,15 @@ const orderSlice = createSlice({
         if (state.order && state.order.orderCode === action.payload.orderCode) {
           state.order = action.payload;
         }
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.orders = state.orders.filter(
+          (order) => order.orderCode !== action.payload
+        );
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(payOrder.pending, (state) => {
         state.loading = true;

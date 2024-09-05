@@ -116,7 +116,9 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 
 const deleteOrderStatus = async (req, res) => {
   try {
-    const order = await Order.findByIdAndDelete(req.params.id);
+    const order = await Order.findOneAndDelete({
+      orderCode: req.params.orderCode,
+    });
 
     if (order) {
       res.json({ message: "Order removed" });
