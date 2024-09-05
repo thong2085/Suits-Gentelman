@@ -74,7 +74,7 @@ const CheckoutPage = () => {
         name: item.name,
         quantity: item.quantity,
         price: item.price,
-        image: item.image,
+        images: Array.isArray(item.images) ? item.images : [item.images],
       })),
       shippingAddress: { ...shippingAddress, phoneNumber },
       paymentMethod,
@@ -94,10 +94,11 @@ const CheckoutPage = () => {
     try {
       const result = await dispatch(createOrder(orderData)).unwrap();
       dispatch(clearCart());
-      navigate(`/order/${result._id}`);
+      navigate(`/order/${result.orderCode}`);
     } catch (error) {
-      console.error(t("failedToPlaceOrder"), error);
+      console.error("Failed to place order:", error);
       // Hiển thị thông báo lỗi cho người dùng
+      alert(t("failedToPlaceOrder") + ": " + error.message);
     }
   };
 

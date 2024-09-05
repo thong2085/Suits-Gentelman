@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    image: { type: String, required: true },
+    images: [{ type: String, required: true }],
     brand: { type: String, required: true },
     countInStock: { type: Number, required: true, default: 0 },
     rating: { type: Number, required: true, default: 0 },

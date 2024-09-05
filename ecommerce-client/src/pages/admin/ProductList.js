@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchProducts,
   deleteProduct,
+  fetchProductList,
 } from "../../features/products/productSlice";
 import Modal from "../../components/Modal";
 import ProductForm from "../../components/ProductForm";
 import { useTranslation } from "react-i18next";
+import { formatCurrency } from "../../utils/formatCurrency";
 
 const ProductList = () => {
   const { t } = useTranslation();
@@ -16,9 +17,7 @@ const ProductList = () => {
   const [editingProduct, setEditingProduct] = useState(null);
 
   useEffect(() => {
-    dispatch(
-      fetchProducts({ keyword: "searchTerm", category: "categoryName" })
-    );
+    dispatch(fetchProductList());
   }, [dispatch]);
 
   const handleDelete = (id) => {
@@ -73,30 +72,36 @@ const ProductList = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td className="py-2 px-4 border-b">{product._id}</td>
-                <td className="py-2 px-4 border-b">{product.name}</td>
-                <td className="py-2 px-4 border-b">
-                  ${product.price.toFixed(2)}
-                </td>
-                <td className="py-2 px-4 border-b">{product.category}</td>
-                <td className="py-2 px-4 border-b">
-                  <button
-                    onClick={() => handleEdit(product)}
-                    className="text-blue-500 hover:underline mr-2"
-                  >
-                    {t("edit")}
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    className="text-red-500 hover:underline"
-                  >
-                    {t("delete")}
-                  </button>
-                </td>
+            {products && products.length > 0 ? (
+              products.map((product) => (
+                <tr key={product._id}>
+                  <td className="py-2 px-4 border-b">{product._id}</td>
+                  <td className="py-2 px-4 border-b">{product.name}</td>
+                  <td className="py-2 px-4 border-b">
+                    {formatCurrency(product.price)}
+                  </td>
+                  <td className="py-2 px-4 border-b">{product.category}</td>
+                  <td className="py-2 px-4 border-b">
+                    <button
+                      onClick={() => handleEdit(product)}
+                      className="text-blue-500 hover:underline mr-2"
+                    >
+                      {t("edit")}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product._id)}
+                      className="text-red-500 hover:underline"
+                    >
+                      {t("delete")}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">No products found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

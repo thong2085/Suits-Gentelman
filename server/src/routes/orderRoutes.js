@@ -19,21 +19,21 @@ router.get("/", protect, admin, getAllOrders);
 router.post("/", protect, createOrder);
 
 // Lấy chi tiết đơn hàng theo ID
-router.get("/:id", protect, getOrderById);
+router.get("/:orderCode", protect, getOrderById);
 
 // Cập nhật trạng thái đơn hàng
-router.put("/:id", protect, admin, updateOrderStatus);
+router.put("/:orderCode/status", protect, admin, updateOrderStatus);
 
 // Xóa đơn hàng (chỉ dành cho Admin)
-router.delete("/:id", protect, admin, deleteOrderStatus);
+router.delete("/:orderCode", protect, admin, deleteOrderStatus);
 
 // Thêm route này
 router.get("/myorders", protect, getMyOrders);
 
 // Thanh toán đơn hàng
-router.put("/:id/pay", protect, updateOrderToPaid);
+router.put("/:orderCode/pay", protect, updateOrderToPaid);
 
 // Hủy đơn hàng
-router.put("/:id/cancel", protect, cancelOrder);
+router.put("/:orderCode/cancel", protect, cancelOrder);
 
 module.exports = router;

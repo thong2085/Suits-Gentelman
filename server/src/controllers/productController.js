@@ -28,14 +28,14 @@ const getProductById = async (req, res) => {
 
 // Tạo sản phẩm mới (Admin)
 const createProduct = async (req, res) => {
-  const { name, price, description, image, brand, category, countInStock } =
+  const { name, price, description, images, brand, category, countInStock } =
     req.body;
 
   const product = new Product({
     name,
     price,
     description,
-    image,
+    images,
     brand,
     category,
     countInStock,
@@ -47,7 +47,7 @@ const createProduct = async (req, res) => {
 
 // Cập nhật sản phẩm (Admin)
 const updateProduct = async (req, res) => {
-  const { name, price, description, image, brand, category, countInStock } =
+  const { name, price, description, images, brand, category, countInStock } =
     req.body;
 
   const product = await Product.findById(req.params.id);
@@ -56,7 +56,7 @@ const updateProduct = async (req, res) => {
     product.name = name || product.name;
     product.price = price || product.price;
     product.description = description || product.description;
-    product.image = image || product.image;
+    product.images = images || product.images;
     product.brand = brand || product.brand;
     product.category = category || product.category;
     product.countInStock = countInStock || product.countInStock;
@@ -299,7 +299,7 @@ const getFeaturedProducts = async (req, res) => {
           _id: 1,
           name: 1,
           price: 1,
-          image: 1,
+          images: 1,
           category: 1,
           rating: 1,
           numReviews: 1,

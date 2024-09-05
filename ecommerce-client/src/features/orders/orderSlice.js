@@ -22,7 +22,6 @@ export const fetchOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get("/api/orders");
-      console.log("Fetched orders:", data);
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -36,25 +35,24 @@ export const fetchOrders = createAsyncThunk(
 
 export const fetchOrderById = createAsyncThunk(
   "orders/fetchOrderById",
-  async (id, { rejectWithValue }) => {
+  async (orderCode, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.get(`/api/orders/${id}`);
+      const { data } = await axiosInstance.get(`/api/orders/${orderCode}`);
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
 
 export const updateOrderStatus = createAsyncThunk(
   "orders/updateOrderStatus",
-  async ({ id, status }, { rejectWithValue }) => {
+  async ({ orderCode, status }, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.put(`/api/orders/${id}`, { status });
+      const { data } = await axiosInstance.put(
+        `/api/orders/${orderCode}/status`,
+        { status }
+      );
       toast.success(
         i18n.t(
           "orderStatusUpdatedSuccessfully",
@@ -64,10 +62,7 @@ export const updateOrderStatus = createAsyncThunk(
       return data;
     } catch (error) {
       return rejectWithValue(
-        i18n.t(
-          "errorUpdatingOrderStatus",
-          "Lỗi khi cập nhật trạng thái đơn hàng"
-        )
+        error.response?.data?.message || "Lỗi khi cập nhật trạng thái đơn hàng"
       );
     }
   }
@@ -75,10 +70,10 @@ export const updateOrderStatus = createAsyncThunk(
 
 export const payOrder = createAsyncThunk(
   "orders/payOrder",
-  async ({ orderId, paymentResult }, { rejectWithValue }) => {
+  async ({ orderCode, paymentResult }, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.put(
-        `/api/orders/${orderId}/pay`,
+        `/api/orders/${orderCode}/pay`,
         paymentResult
       );
       toast.success(
@@ -95,9 +90,11 @@ export const payOrder = createAsyncThunk(
 
 export const cancelOrder = createAsyncThunk(
   "orders/cancelOrder",
-  async (id, { rejectWithValue }) => {
+  async (orderCode, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.put(`/api/orders/${id}/cancel`);
+      const { data } = await axiosInstance.put(
+        `/api/orders/${orderCode}/cancel`
+      );
       toast.success(
         i18n.t("orderCancelledSuccessfully", "Hủy đơn hàng thành công")
       );
@@ -158,12 +155,12 @@ const orderSlice = createSlice({
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const index = state.orders.findIndex(
-          (order) => order._id === action.payload._id
+          (order) => order.orderCode === action.payload.orderCode
         );
         if (index !== -1) {
           state.orders[index] = action.payload;
         }
-        if (state.order && state.order._id === action.payload._id) {
+        if (state.order && state.order.orderCode === action.payload.orderCode) {
           state.order = action.payload;
         }
       })
@@ -179,7 +176,7 @@ const orderSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(cancelOrder.fulfilled, (state, action) => {
-        if (state.order && state.order._id === action.payload._id) {
+        if (state.order && state.order.orderCode === action.payload.orderCode) {
           state.order = action.payload;
         }
       });

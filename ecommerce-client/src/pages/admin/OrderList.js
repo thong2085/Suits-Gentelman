@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchOrders } from "../../features/orders/orderSlice";
 import { useTranslation } from "react-i18next";
+import { formatCurrency } from "../../utils/formatCurrency";
 
 const OrderList = () => {
   const { t } = useTranslation();
@@ -32,16 +33,16 @@ const OrderList = () => {
   };
   const getStatusColor = (status) => {
     switch (status) {
-      case "Đã xử lý":
-        return "bg-blue-100 text-blue-800";
-      case "Đã gửi":
-        return "bg-yellow-100 text-yellow-800";
-      case "Đã giao":
-        return "bg-green-100 text-green-800";
-      case "Đã hủy":
-        return "bg-red-100 text-red-800";
+      case "processing":
+        return "text-yellow-600";
+      case "shipped":
+        return "text-blue-600";
+      case "delivered":
+        return "text-green-600";
+      case "cancelled":
+        return "text-red-600";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "text-gray-600";
     }
   };
 
@@ -55,9 +56,9 @@ const OrderList = () => {
               <th>{t("orderId")}</th>
               <th>{t("user")}</th>
               <th>{t("date")}</th>
+              <th>{t("image")}</th>
               <th>{t("total")}</th>
               <th>{t("paid")}</th>
-              <th>{t("delivered")}</th>
               <th>{t("paymentMethod")}</th>
               <th>{t("status")}</th>
               <th>{t("actions")}</th>
@@ -69,14 +70,28 @@ const OrderList = () => {
                 <td title={order._id}>{order._id}</td>
                 <td>{getUserInfo(order)}</td>
                 <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                <td>${order.totalPrice.toFixed(2)}</td>
+                <td>
+                  <img
+                    src={
+                      Array.isArray(order.orderItems[0].images)
+                        ? order.orderItems[0].images[0]
+                        : order.orderItems[0].images
+                    }
+                    alt={order.name}
+                    className="w-10 h-10 object-cover"
+                  />
+                </td>
+                <td>{formatCurrency(order.totalPrice)}</td>
                 <td>{order.isPaid ? t("yes") : t("no")}</td>
-                <td>{order.isDelivered ? t("yes") : t("no")}</td>
                 <td>{t(order.paymentMethod)}</td>
-                <td>{t(order.status)}</td>
+                <td>
+                  <span className={`${getStatusColor(order.status)} font-bold`}>
+                    {t(order.status)}
+                  </span>
+                </td>
                 <td>
                   <Link
-                    to={`/admin/orders/${order._id}`}
+                    to={`/admin/orders/${order.orderCode}`}
                     className="text-blue-500 hover:underline"
                   >
                     {t("details")}

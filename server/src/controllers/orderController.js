@@ -23,10 +23,9 @@ const getAllOrders = async (req, res) => {
 // Lấy thông tin chi tiết của đơn hàng theo ID
 const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate(
-      "user",
-      "id name email"
-    );
+    const order = await Order.findOne({
+      orderCode: req.params.orderCode,
+    }).populate("user", "id name email");
 
     if (order) {
       res.json(order);
@@ -56,11 +55,22 @@ const createOrder = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("No order items");
   } else {
+    let orderCode;
+    let isUnique = false;
+    while (!isUnique) {
+      orderCode = generateOrderCode();
+      const existingOrder = await Order.findOne({ orderCode });
+      if (!existingOrder) {
+        isUnique = true;
+      }
+    }
+
     const order = new Order({
+      orderCode,
       orderItems: orderItems.map((x) => ({
         ...x,
         product: x.product,
-        image: x.image, // Đảm bảo trường image được bao gồm
+        images: Array.isArray(x.images) ? x.images : [x.images],
         _id: undefined,
       })),
       user: req.user._id,
@@ -79,13 +89,17 @@ const createOrder = asyncHandler(async (req, res) => {
 
 // Cập nhật trạng thái đơn hàng
 const updateOrderStatus = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id);
+  const order = await Order.findOne({ orderCode: req.params.orderCode });
 
   if (order) {
     order.status = req.body.status;
 
     if (req.body.status === "shipped" && !order.shippedAt) {
       order.shippedAt = Date.now();
+    }
+
+    if (req.body.status === "delivered" && !order.deliveredAt) {
+      order.deliveredAt = Date.now();
     }
 
     if (req.body.status === "cancelled" && !order.cancelledAt) {
@@ -126,7 +140,7 @@ const getMyOrders = async (req, res) => {
 };
 
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id);
+  const order = await Order.findOne({ orderCode: req.params.orderCode });
 
   if (order) {
     order.isPaid = true;
@@ -148,7 +162,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 });
 
 const cancelOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id);
+  const order = await Order.findOne({ orderCode: req.params.orderCode });
 
   if (!order) {
     res.status(404);
@@ -171,6 +185,15 @@ const cancelOrder = asyncHandler(async (req, res) => {
 
   res.json(updatedOrder);
 });
+
+const generateOrderCode = () => {
+  const prefix = "OD";
+  const timestamp = Date.now().toString().slice(-6);
+  const random = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0");
+  return `${prefix}${timestamp}${random}`;
+};
 
 module.exports = {
   getAllOrders,

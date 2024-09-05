@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
     <Link to={`/product/${product._id}`} className="block">
       <div className="card overflow-hidden">
         <img
-          src={product.image}
+          src={product.images[0]} // Sử dụng ảnh đầu tiên trong mảng
           alt={product.name}
           className="w-full h-64 object-cover object-center"
         />

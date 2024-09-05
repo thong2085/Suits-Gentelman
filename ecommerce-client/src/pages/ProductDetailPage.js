@@ -6,6 +6,10 @@ import { addToCart } from "../features/cart/cartSlice";
 import { useTranslation } from "react-i18next";
 import { formatCurrency } from "../utils/formatCurrency";
 import ProductReviews from "../components/ProductReviews";
+import ImageGallery from "react-image-gallery";
+import Zoom from "react-medium-image-zoom";
+import "react-image-gallery/styles/css/image-gallery.css";
+import "react-medium-image-zoom/dist/styles.css";
 
 const ProductDetailPage = () => {
   const { t } = useTranslation();
@@ -13,16 +17,30 @@ const ProductDetailPage = () => {
   const dispatch = useDispatch();
   const { product, loading, error } = useSelector((state) => state.products);
   const [quantity, setQuantity] = useState(1);
+  const [images, setImages] = useState([]);
 
   const fetchProduct = useCallback(() => {
-    dispatch(fetchProductById(id))
-      .then((action) => {})
-      .catch((error) => {});
+    dispatch(fetchProductById(id));
   }, [dispatch, id]);
 
   useEffect(() => {
     fetchProduct();
   }, [fetchProduct]);
+
+  useEffect(() => {
+    if (product && product.images) {
+      const galleryImages = product.images.map((img) => ({
+        original: img,
+        thumbnail: img,
+        renderItem: (item) => (
+          <Zoom>
+            <img src={item.original} alt={product.name} />
+          </Zoom>
+        ),
+      }));
+      setImages(galleryImages);
+    }
+  }, [product]);
 
   const handleAddToCart = () => {
     dispatch(addToCart({ ...product, quantity }));
@@ -41,14 +59,15 @@ const ProductDetailPage = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="md:flex">
-          <div className="md:flex-shrink-0">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="h-full w-full object-cover md:w-48"
+          <div className="md:flex-shrink-0 w-full md:w-1/2">
+            <ImageGallery
+              items={images}
+              showPlayButton={false}
+              showFullscreenButton={false}
+              useBrowserFullscreen={false}
             />
           </div>
-          <div className="p-8">
+          <div className="p-8 w-full md:w-1/2">
             <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
             <p className="text-red-500 font-bold text-2xl mb-4">
               {formatCurrency(product.price)}

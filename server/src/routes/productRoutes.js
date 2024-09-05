@@ -21,6 +21,7 @@ const router = express.Router();
 
 // Đặt các route cụ thể trước các route có tham số
 router.route("/").get(getProducts).post(protect, admin, createProduct);
+router.get("/admin", protect, admin, getAllProducts);
 router.get("/categories", getAllCategories);
 router.get("/category/:category", getProductsByCategory);
 router.get("/featured", getFeaturedProducts); // Đặt route này trước /:id
