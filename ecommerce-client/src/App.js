@@ -51,7 +51,7 @@ function App() {
             <Route path="search" element={<SearchResultsPage />} />
             <Route path="category/:category" element={<CategoryPage />} />
             <Route path="/orders" element={<OrderListPage />} />
-            <Route path="/order/:id" element={<OrderDetailPage />} />
+            <Route path="/order/:orderCode" element={<OrderDetailPage />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
           <Route element={<ProtectedRoute adminOnly={true} />}>

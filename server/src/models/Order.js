@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema(
       {
         name: { type: String, required: true },
         quantity: { type: Number, required: true }, // Thay đổi từ 'qty' thành 'quantity'
-        image: { type: String, required: true }, // Đảm bảo trường này tồn tại
+        images: { type: Array, required: true }, // Đảm bảo trường này tồn tại
         price: { type: Number, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,
@@ -72,6 +72,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
       enum: ["processing", "shipped", "delivered", "cancelled"],
       default: "processing",
+    },
+    orderCode: {
+      type: String,
+      unique: true,
     },
   },
   {

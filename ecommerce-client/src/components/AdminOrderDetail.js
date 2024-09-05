@@ -68,7 +68,7 @@ const AdminOrderDetail = () => {
     setIsUpdating(true);
     try {
       await dispatch(
-        updateOrderStatus({ id: order._id, status: newStatus })
+        updateOrderStatus({ orderCode: order.orderCode, status: newStatus })
       ).unwrap();
       setCurrentStatus(newStatus);
       alert(t("orderStatusUpdatedTo") + " " + t(newStatus));
@@ -120,7 +120,8 @@ const AdminOrderDetail = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p>
-              <span className="font-semibold">{t("orderId")}:</span> {order._id}
+              <span className="font-semibold">{t("orderId")}:</span>{" "}
+              {order.orderCode}
             </p>
             <p>
               <span className="font-semibold">{t("orderDate")}:</span>{" "}
@@ -162,7 +163,7 @@ const AdminOrderDetail = () => {
             {order.orderItems?.map((item) => (
               <li key={item._id} className="flex items-center mb-2">
                 <img
-                  src={item.image}
+                  src={item.images[0]}
                   alt={item.name}
                   className="w-12 h-12 object-cover rounded mr-4"
                 />

@@ -16,7 +16,7 @@ const ProductForm = ({ product, onClose }) => {
     category: "",
     description: "",
     countInStock: "",
-    image: "",
+    images: "",
     brand: "",
   });
 
@@ -30,8 +30,8 @@ const ProductForm = ({ product, onClose }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setFormData({ ...formData, image: imageUrl });
+  const handleImageUpload = (imagesUrl) => {
+    setFormData({ ...formData, images: imagesUrl });
   };
 
   const handleSubmit = (e) => {
@@ -58,9 +58,9 @@ const ProductForm = ({ product, onClose }) => {
         <div className="mb-4">
           <label className="block mb-2">{t("image")}</label>
           <ImageUploader onImageUpload={handleImageUpload} />
-          {formData.image && (
+          {formData.images && (
             <img
-              src={formData.image}
+              src={formData.images}
               alt="Product"
               className="mt-2 h-32 object-cover"
             />

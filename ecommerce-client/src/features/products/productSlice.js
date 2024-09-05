@@ -11,8 +11,10 @@ export const fetchProducts = createAsyncThunk(
       const response = await axiosInstance.get(url, {
         params: { page, limit },
       });
+      console.log("API response:", response.data); // Thêm dòng này
       return response.data;
     } catch (error) {
+      console.error("API error:", error); // Thêm dòng này
       return rejectWithValue(error.response.data);
     }
   }
@@ -126,6 +128,21 @@ export const getReviews = createAsyncThunk(
   }
 );
 
+// Thêm hàm fetchProductList
+export const fetchProductList = createAsyncThunk(
+  "products/fetchProductList",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/api/products/admin");
+      console.log("Admin API response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Admin API error:", error);
+      return rejectWithValue(error.response?.data || "An error occurred");
+    }
+  }
+);
+
 const initialState = {
   products: [],
   product: null,
@@ -151,7 +168,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
         state.totalProducts = action.payload.totalProducts;
         state.pages = action.payload.pages;
         state.page = action.payload.page;
@@ -226,6 +243,18 @@ const productSlice = createSlice({
       .addCase(getReviews.rejected, (state, action) => {
         state.reviewsLoading = false;
         state.reviewsError = action.payload;
+      })
+      .addCase(fetchProductList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProductList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(fetchProductList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

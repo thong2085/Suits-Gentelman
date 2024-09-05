@@ -8,7 +8,7 @@ import { formatCurrency } from "../utils/formatCurrency";
 
 const OrderDetailPage = () => {
   const { t } = useTranslation();
-  const { id } = useParams();
+  const { orderCode } = useParams();
   const dispatch = useDispatch();
   const { order, loading, error } = useSelector((state) => state.orders);
   const [cancelLoading, setCancelLoading] = useState(false);
@@ -16,16 +16,16 @@ const OrderDetailPage = () => {
   const [justCancelled, setJustCancelled] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchOrderById(id));
-  }, [dispatch, id]);
+    dispatch(fetchOrderById(orderCode));
+  }, [dispatch, orderCode]);
 
   const handleCancelOrder = async () => {
     if (window.confirm(t("confirmCancelOrder"))) {
       setCancelLoading(true);
       setCancelError(null);
       try {
-        await dispatch(cancelOrder(id)).unwrap();
-        dispatch(fetchOrderById(id));
+        await dispatch(cancelOrder(orderCode)).unwrap();
+        dispatch(fetchOrderById(orderCode));
         setJustCancelled(true);
         setTimeout(() => setJustCancelled(false), 3000);
       } catch (err) {
@@ -68,7 +68,8 @@ const OrderDetailPage = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p>
-              <span className="font-semibold">{t("orderId")}:</span> {order._id}
+              <span className="font-semibold">{t("orderId")}:</span>{" "}
+              {order.orderCode}
             </p>
             <p>
               <span className="font-semibold">{t("orderDate")}:</span>{" "}
@@ -115,7 +116,9 @@ const OrderDetailPage = () => {
             {order.orderItems?.map((item) => (
               <li key={item._id} className="flex items-center mb-2">
                 <img
-                  src={item.image}
+                  src={
+                    Array.isArray(item.images) ? item.images[0] : item.images
+                  }
                   alt={item.name}
                   className="w-12 h-12 object-cover rounded mr-4"
                 />
