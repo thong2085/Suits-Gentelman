@@ -25,6 +25,7 @@ import AdminOrderDetail from "./components/AdminOrderDetail";
 import NotFoundPage from "./pages/NotFoundPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      <Chatbot />
     </PayPalScriptProvider>
   );
 }
