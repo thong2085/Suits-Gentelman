@@ -32,7 +32,7 @@ h6 {
 }
 
 a {
-  color: var(--color-background);
+  color: var(--color-accent);
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -193,4 +193,87 @@ select:focus {
 }
 .bg-accent {
   background-color: #1b1b1b;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  /* Adjust table for mobile */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 8px 12px;
+  }
+
+  /* Adjust banner for mobile */
+  .banner {
+    padding: 40px 0;
+  }
+
+  .banner h1 {
+    font-size: 2rem;
+  }
+
+  .banner p {
+    font-size: 1rem;
+  }
+
+  /* Ensure touch targets are large enough */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  select,
+  .btn {
+    min-height: 44px;
+  }
+}
+
+/* Improve readability on mobile */
+@media (max-width: 480px) {
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .card {
+    padding: 15px;
+  }
+}
+
+/* Ensure flexbox layouts stack on mobile */
+@media (max-width: 640px) {
+  .flex-col-mobile {
+    flex-direction: column;
+  }
+
+  .w-full-mobile {
+    width: 100%;
+  }
 }

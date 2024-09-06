@@ -68,8 +68,10 @@ const ProductDetailPage = () => {
             />
           </div>
           <div className="p-8 w-full md:w-1/2">
-            <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
-            <p className="text-red-500 font-bold text-2xl mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+              {product.name}
+            </h2>
+            <p className="text-red-500 font-bold text-xl sm:text-2xl mb-4">
               {formatCurrency(product.price)}
             </p>
             <p className="text-gray-600 mb-4">{product.description}</p>
@@ -88,7 +90,7 @@ const ProductDetailPage = () => {
             </div>
             <button
               onClick={handleAddToCart}
-              className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition duration-300"
+              className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition duration-300 w-full sm:w-auto"
             >
               {t("addToCart")}
             </button>
